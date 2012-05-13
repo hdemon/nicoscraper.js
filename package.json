@@ -1,0 +1,17 @@
+{
+  "author": "hdemon",
+  "name": "nicoscraper",
+  "version": "0.0.1",
+  "scripts": {
+    "test": "mocha -R spec --compilers coffee:coffee-script"
+    },
+  "dependencies": {
+    "zombie":"0.12.x",
+    "mocha":"1.0.x",
+    "coffee-script":"1.2.x",
+    "should":">= 0.0.1"
+    },
+  "engines": {
+    "node": "0.6.xx"
+  }
+}
