@@ -5,7 +5,7 @@ _.str.include 'Underscore.string', 'string'
 $ = require 'jquery'
 
 
-class Xml
+class MylistAtom
   constructor : (@xml) ->
     @entry = []
     for entry in $(@xml).find('entry')
@@ -36,4 +36,4 @@ class Entry
     s = string.match(/\w+/g)
     new Date(s[0], s[1] - 1, s[2], s[3], s[4], s[5], 0) / 1000
 
-module.exports = Xml
+module.exports = MylistAtom
