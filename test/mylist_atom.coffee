@@ -1,3 +1,7 @@
+_  = require 'underscore'
+_.str = require 'underscore.string'
+_.mixin _.str.exports()
+_.str.include 'Underscore.string', 'string'
 require 'should'
 MylistAtom = require '../lib/mylist_atom.coffee'
 
@@ -105,7 +109,11 @@ describe "About MylistAtom class", ->
       @xml = new MylistAtom xml
       done()
 
-    it "has mylist property", ->
+    it "has a mylist property", ->
+      @xml.title.should.equal '【Oblivion】おっさんの大冒険'
+      @xml.subtitle.should.equal 'ふふ　マイリスを開いてしまいましたか＾＾'
+      @xml.updated.should.equal '2012-05-17T22:28:07+09:00'
+      @xml.author.should.equal 'おぽこ'
 
     it "has movies property in this mylist", ->
       @xml.entry['sm8481759'].title.should.equal '【Oblivion】おっさんの大冒険１（ゆっくり実況）'
