@@ -9,9 +9,9 @@ class MylistAtom
   constructor : (@xml) ->
     @entry = []
     for entry in $(@xml).find('entry')
-      @entry.push new Entry(entry)
+      @entry.push new MylistEntry(entry)
 
-class Entry
+class MylistEntry
   constructor : (@body) ->
     b = $(@body)
     @title = b.find('title').text()
