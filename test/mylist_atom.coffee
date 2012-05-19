@@ -112,6 +112,7 @@ describe "About MylistAtom class", ->
     it "has a mylist property", ->
       @xml.title.should.equal '【Oblivion】おっさんの大冒険'
       @xml.subtitle.should.equal 'ふふ　マイリスを開いてしまいましたか＾＾'
+      @xml.mylist_id.should.equal 15196568
       @xml.updated.should.equal '2012-05-17T22:28:07+09:00'
       @xml.author.should.equal 'おぽこ'
 
