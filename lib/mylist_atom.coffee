@@ -24,7 +24,7 @@ class MylistEntry
     b = $(@body)
     @title = b.find('title').text()
     @video_id = b.find('link').attr('href').split('/')[4]
-    @timelike_id = Number(b.find('id').text().split(',')[1].split(':')[1].split('/')[2])
+    @timelike_id = Number b.find('id').text().split(',')[1].split(':')[1].split('/')[2]
     @published = b.find('published').text()
     @updated = b.find('updated').text()
 
