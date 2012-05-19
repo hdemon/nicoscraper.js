@@ -15,7 +15,7 @@ class MylistAtom
     b = $(@xml)
     @title = b.find('title').eq(0).text().substring("マイリスト　".length).slice(0, -("‐ニコニコ動画".length))
     @subtitle = b.find('subtitle').text()
-    @mylist_id = b.find('link').eq(0).attr('href').split('/')[4]
+    @mylist_id = Number b.find('link').eq(0).attr('href').split('/')[4]
     @updated = b.find('updated').eq(0).text()
     @author = b.find('author name').text()
 
