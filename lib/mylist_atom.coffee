@@ -7,9 +7,10 @@ $ = require 'jquery'
 
 class MylistAtom
   constructor : (@xml) ->
-    @entry = []
+    @entry = {}
     for entry in $(@xml).find('entry')
-      @entry.push new MylistEntry(entry)
+      e = new MylistEntry(entry)
+      @entry[e.video_id] = e
 
 class MylistEntry
   constructor : (@body) ->

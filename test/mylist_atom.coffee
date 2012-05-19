@@ -108,10 +108,10 @@ describe "About MylistAtom class", ->
     it "has mylist property", ->
 
     it "has movies property in this mylist", ->
-      @xml.entry[0].title.should.equal '【Oblivion】おっさんの大冒険１（ゆっくり実況）'
-      @xml.entry[0].video_id.should.equal 'sm8481759'
-      @xml.entry[0].timelike_id.should.equal 1255238132      
-      @xml.entry[0].thumbnail_url.should.equal 'http://tn-skr4.smilevideo.jp/smile?i=8481759'
-      @xml.entry[0].description.should.equal 'おっさんの生き様をとくとごらんあれ！このミリオンをいつまでも大切にしたい。そう、いつまでも・・・。おっさんがここまでこれたのも、みなさまのおかげですｍ（＿＿）ｂ次回：sm8506034　マイリス：mylist/15196568【重要】この動画ではPC版Oblivionでしか表現できないシーンが含まれます。このゲームにご興味のある方はご注意ください。'
-      @xml.entry[0].length.should.equal 748
-      @xml.entry[0].info_date.should.equal 1255238135
+      @xml.entry['sm8481759'].title.should.equal '【Oblivion】おっさんの大冒険１（ゆっくり実況）'
+      @xml.entry['sm8481759'].video_id.should.equal 'sm8481759'
+      @xml.entry['sm8481759'].timelike_id.should.equal 1255238132
+      @xml.entry['sm8481759'].thumbnail_url.should.equal 'http://tn-skr4.smilevideo.jp/smile?i=8481759'
+      @xml.entry['sm8481759'].description.should.equal 'おっさんの生き様をとくとごらんあれ！このミリオンをいつまでも大切にしたい。そう、いつまでも・・・。おっさんがここまでこれたのも、みなさまのおかげですｍ（＿＿）ｂ次回：sm8506034　マイリス：mylist/15196568【重要】この動画ではPC版Oblivionでしか表現できないシーンが含まれます。このゲームにご興味のある方はご注意ください。'
+      @xml.entry['sm8481759'].length.should.equal 748
+      @xml.entry['sm8481759'].info_date.should.equal 1255238135
