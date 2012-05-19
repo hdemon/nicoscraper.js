@@ -16,20 +16,20 @@ class MylistEntry
     b = $(@body)
     @title = b.find('title').text()
     @video_id = b.find('link').attr('href').split('/')[4]
-    @timelike_id = new Number(b.find('id').text().split(',')[1].split(':')[1].split('/')[2])
+    @timelike_id = Number(b.find('id').text().split(',')[1].split(':')[1].split('/')[2])
     @published = b.find('published').text()
     @updated = b.find('updated').text()
 
     c = b.find('content')
     @thumbnail_url = c.find('img').attr('src')
     @description = c.find('.nico-description').text()
-    @length = @.convert_to_sec(c.find('.nico-info-length').text())
-    @info_date = @.convert_to_unix_time(c.find('.nico-info-date').text())
+    @length = @.convert_to_sec c.find('.nico-info-length').text()
+    @info_date = @.convert_to_unix_time c.find('.nico-info-date').text()
 
   convert_to_sec : (string) ->
     s = string.split(':')
-    minute = new Number s[0]
-    second = new Number s[1]
+    minute = Number s[0]
+    second = Number s[1]
     minute * 60 + second
 
   convert_to_unix_time : (string) ->
