@@ -1,6 +1,6 @@
 require 'should'
 
-MovieSearchAtom = require '../lib/movie_search_atom.coffee'
+TagSearchAtom = require '../lib/tag_search_atom.coffee'
 
 xml = '''
 <?xml version="1.0" encoding="utf-8"?>
@@ -467,10 +467,10 @@ xml = '''
 </feed>
 '''
 
-describe "About MovieSearchAtom class", ->
+describe "About TagSearchAtom class", ->
   describe "when create an instance with a video id", ->
     before (done) ->
-      @search_page = new MovieSearchAtom xml
+      @search_page = new TagSearchAtom xml
       done()
 
     it "has a mylist property", ->

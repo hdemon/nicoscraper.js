@@ -6,7 +6,7 @@ $ = require 'jquery'
 MylistAtom = require '../lib/mylist_atom'
 
 
-class MovieSearchAtom extends MylistAtom
+class TagSearchAtom extends MylistAtom
   get_all_info : ->
     @.get_tags()
     @.get_updated_time()
@@ -17,4 +17,4 @@ class MovieSearchAtom extends MylistAtom
                .slice(0, -("‐ニコニコ動画".length))
                .split(" ")
 
-module.exports = MovieSearchAtom
+module.exports = TagSearchAtom
