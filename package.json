@@ -3,7 +3,7 @@
   "name": "nicoscraper",
   "version": "0.0.1",
   "scripts": {
-    "test": "mocha -R spec --compilers coffee:coffee-script"
+    "test": "mocha -R spec --compilers coffee:coffee-script -t 10000"
   },
   "dependencies": {
     "coffee-script":  "1.2.x",
