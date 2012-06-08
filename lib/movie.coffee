@@ -21,5 +21,3 @@ class Movie
 
 
 module.exports = Movie
-m = new Movie 'sm17683648'
-console.log m
