@@ -33,6 +33,12 @@ class TagSearch
 
     param.join('&')
 
+  next : ->
+    @page += 1
+
+  prev : ->
+    @page -= 1
+
   _page_param : -> "page=#{@page}"
 
   _sort_param : ->
@@ -48,12 +54,5 @@ class TagSearch
     switch @params.order_param
       when 'asc' then 'order=a'
       when 'desc' then null
-
-  next : ->
-    @page += 1
-
-  prev : ->
-    @page -= 1
-
 
 module.exports = TagSearch
