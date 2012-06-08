@@ -7,19 +7,18 @@ Connection = require '../lib/connection'
 TagSearchAtom = require '../lib/tag_search_atom'
 
 class TagSearch
-
   constructor : (@search_string, @callback, @option={}) ->
     @option.page or= 1
     @page = @option.page
     @option.sort_method = 'newness_of_comment'
     @option.order_param = 'desc'
 
-    connection = new Connection @.uri(),
+    connection = new Connection @uri(),
       success : (browser) =>
         info = new TagSearchAtom browser.window.document.innerHTML
         @callback(info)
 
-  uri : -> @.host() + @.path() + '?' + @.param()
+  uri : -> @host() + @path() + '?' + @param()
 
   host : -> 'http://www.nicovideo.jp/'
 
@@ -27,16 +26,16 @@ class TagSearch
 
   param : ->
     param = []
-    param.push @.page_param()
-    param.push @.sort_param() if @.sort_param()?
-    param.push @.order_param() if @.order_param()?
+    param.push page_param()
+    param.push sort_param() if sort_param()?
+    param.push order_param() if order_param()?
     param.push 'rss=atom'
 
     param.join('&')
 
-  page_param : -> "page=#{@page}"
+  _page_param : -> "page=#{@page}"
 
-  sort_param : ->
+  _sort_param : ->
     switch @option.sort_method
       when 'newness_of_comment' then null
       when 'view_num' then 'sort=v'
@@ -45,7 +44,7 @@ class TagSearch
       when 'published_date' then 'sort=f'
       when 'length' then 'sort=l'
 
-  order_param : ->
+  _order_param : ->
     switch @option.order_param
       when 'asc' then 'order=a'
       when 'desc' then null

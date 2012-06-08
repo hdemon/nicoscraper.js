@@ -13,7 +13,7 @@ class GetThumbInfo
     @description = b.find('description').text()
     @thumbnail_url = b.find('thumbnail_url').text()
     @first_retrieve = b.find('first_retrieve').text()
-    @length = @.convert_to_sec b.find('length').text()
+    @length = @_convert_to_sec b.find('length').text()
     @movie_type = b.find('movie_type').text()
     @size_high = Number b.find('size_high').text()
     @size_low = Number b.find('size_low').text()
@@ -26,15 +26,15 @@ class GetThumbInfo
     @embeddable = Number b.find('embeddable').text()
     @no_live_play = Number b.find('no_live_play').text()
 
-    @tags = @.parse_tags()
+    @tags = @_parse_tags()
 
-  parse_tags : ->
+  _parse_tags : ->
     xml_jp = $(@xml).find('tags[domain=jp]')
     xml_tw = $(@xml).find('tags[domain=tw]')
 
-    { 'jp' : @.objectize xml_jp }
+    { 'jp' : @_objectize xml_jp }
 
-  objectize : (xml) ->
+  _objectize : (xml) ->
     array = []
 
     xml.find('tag').each (i, e) ->
@@ -49,13 +49,13 @@ class GetThumbInfo
 
     return array
 
-  convert_to_sec : (string) ->
+  _convert_to_sec : (string) ->
     s = string.split(':')
     minute = Number s[0]
     second = Number s[1]
     minute * 60 + second
 
-  convert_to_unix_time : (string) ->
+  _convert_to_unix_time : (string) ->
     s = string.match(/\w+/g)
     new Date(s[0], s[1] - 1, s[2], s[3], s[4], s[5], 0) / 1000
 

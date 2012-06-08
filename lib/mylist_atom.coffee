@@ -13,15 +13,15 @@ class MylistAtom
       @entry[e.video_id] = e
 
     @b = $(@xml)
-    @.get_all_info()
+    @get_all_info()
     delete @b
 
   get_all_info : ->
-    @.get_title()
-    @.get_subtitle()
-    @.get_mylist_id()
-    @.get_updated_time()
-    @.get_author()
+    @get_title()
+    @get_subtitle()
+    @get_mylist_id()
+    @get_updated_time()
+    @get_author()
 
   get_title : ->
     @title = @b.find('title').eq(0).text().substring("マイリスト　".length).slice(0, -("‐ニコニコ動画".length))

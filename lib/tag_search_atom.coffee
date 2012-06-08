@@ -8,8 +8,8 @@ MylistAtom = require '../lib/mylist_atom'
 
 class TagSearchAtom extends MylistAtom
   get_all_info : ->
-    @.get_tags()
-    @.get_updated_time()
+    @get_tags()
+    @get_updated_time()
 
   get_tags : ->
     @tags = @b .find('title').eq(0).text()

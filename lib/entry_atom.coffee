@@ -10,20 +10,20 @@ class EntryAtom
     @b = $(@body)
     @c = @b.find('content')
 
-    @.get_all_info()
+    @get_all_info()
 
     @b = @c = null
 
   get_all_info : ->
-    @.get_title()
-    @.get_video_id()
-    @.get_timelike_id()
-    @.get_published_time()
-    @.get_updated_time()
-    @.get_thumbnail_url()
-    @.get_description()
-    @.get_length()
-    @.get_info_date()
+    @get_title()
+    @get_video_id()
+    @get_timelike_id()
+    @get_published_time()
+    @get_updated_time()
+    @get_thumbnail_url()
+    @get_description()
+    @get_length()
+    @get_info_date()
 
   get_title : ->
     @title = @b.find('title').text()
@@ -47,10 +47,10 @@ class EntryAtom
     @description = @c.find('.nico-description').text()
 
   get_length : ->
-    @length = @.convert_to_sec @c.find('.nico-info-length').text()
+    @length = @convert_to_sec @c.find('.nico-info-length').text()
 
   get_info_date : ->
-    @info_date = @.convert_to_unix_time @c.find('.nico-info-date').text()
+    @info_date = @convert_to_unix_time @c.find('.nico-info-date').text()
 
   convert_to_sec : (string) ->
     s = string.split(':')
