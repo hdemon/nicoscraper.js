@@ -18,13 +18,13 @@ class TagSearch
         info = new TagSearchAtom browser.window.document.innerHTML
         @callback(info)
 
-  uri : -> @host() + @path() + '?' + @param()
+  uri : -> @host() + @path() + '?' + @query_param()
 
   host : -> 'http://www.nicovideo.jp/'
 
   path : -> "tag/#{@search_string}"
 
-  param : ->
+  query_param : ->
     param = []
     param.push page_param()
     param.push sort_param() if sort_param()?
