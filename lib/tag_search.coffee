@@ -7,11 +7,11 @@ Connection = require '../lib/connection'
 TagSearchAtom = require '../lib/tag_search_atom'
 
 class TagSearch
-  constructor : (@search_string, @callback, @option={}) ->
-    @option.page or= 1
-    @page = @option.page
-    @option.sort_method = 'newness_of_comment'
-    @option.order_param = 'desc'
+  constructor : (@params={}, @callback) ->
+    @page = @params.page || 1
+    @search_string = @params.search_string || ''
+    @params.sort_method = 'newness_of_comment'
+    @params.order_param = 'desc'
 
     connection = new Connection @uri(),
       success : (browser) =>
@@ -36,7 +36,7 @@ class TagSearch
   _page_param : -> "page=#{@page}"
 
   _sort_param : ->
-    switch @option.sort_method
+    switch @params.sort_method
       when 'newness_of_comment' then null
       when 'view_num' then 'sort=v'
       when 'comment_num' then 'sort=r'
@@ -45,7 +45,7 @@ class TagSearch
       when 'length' then 'sort=l'
 
   _order_param : ->
-    switch @option.order_param
+    switch @params.order_param
       when 'asc' then 'order=a'
       when 'desc' then null
 
