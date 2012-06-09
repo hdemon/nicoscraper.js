@@ -2,13 +2,14 @@ _  = require 'underscore'
 _.str = require 'underscore.string'
 _.mixin _.str.exports()
 _.str.include 'Underscore.string', 'string'
+
 $ = require 'jquery'
 
 
 class EntryAtom
   constructor : (@body) ->
     @b = $(@body)
-    @c = @b.find('content')
+    @c = @b.find 'content'
 
     @get_all_info()
 
@@ -53,13 +54,13 @@ class EntryAtom
     @info_date = @convert_to_unix_time @c.find('.nico-info-date').text()
 
   convert_to_sec : (string) ->
-    s = string.split(':')
+    s = string.split ':'
     minute = Number s[0]
     second = Number s[1]
     minute * 60 + second
 
   convert_to_unix_time : (string) ->
-    s = string.match(/\w+/g)
+    s = string.match /\w+/g
     new Date(s[0], s[1] - 1, s[2], s[3], s[4], s[5], 0) / 1000
 
 module.exports = EntryAtom

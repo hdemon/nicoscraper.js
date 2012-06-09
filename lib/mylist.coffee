@@ -7,7 +7,6 @@ $ = require 'jquery'
 
 Connection = require '../lib/connection'
 MylistAtom = require '../lib/mylist_atom'
-# Connection = require 'connection'
 
 
 $ml = (mylist_id) ->
@@ -23,8 +22,6 @@ class Mylist
         @xml = new MylistAtom browser.window.document.innerHTML
         callback @
 
-
-  title : ->
-    @xml.title
+  title : -> @xml.title
 
 module.exports = Mylist

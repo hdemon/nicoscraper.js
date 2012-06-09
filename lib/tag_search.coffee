@@ -2,9 +2,12 @@ _  = require 'underscore'
 _.str = require 'underscore.string'
 _.mixin _.str.exports()
 _.str.include 'Underscore.string', 'string'
+
 $ = require 'jquery'
+
 Connection = require '../lib/connection'
 TagSearchAtom = require '../lib/tag_search_atom'
+
 
 class TagSearch
   constructor : (@params={}, @callback) ->
@@ -16,7 +19,7 @@ class TagSearch
     connection = new Connection @uri(),
       success : (browser) =>
         info = new TagSearchAtom browser.window.document.innerHTML
-        @callback(info)
+        @callback info
 
   uri : -> @host() + @path() + '?' + @query_param()
 
@@ -31,7 +34,7 @@ class TagSearch
     param.push order_param() if order_param()?
     param.push 'rss=atom'
 
-    param.join('&')
+    param.join '&'
 
   next : ->
     @page += 1

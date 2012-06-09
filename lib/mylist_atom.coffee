@@ -2,14 +2,17 @@ _  = require 'underscore'
 _.str = require 'underscore.string'
 _.mixin _.str.exports()
 _.str.include 'Underscore.string', 'string'
+
 $ = require 'jquery'
+
 EntryAtom = require '../lib/entry_atom'
+
 
 class MylistAtom
   constructor : (@xml) ->
     @entry = {}
-    for entry in $(@xml).find('entry')
-      e = new EntryAtom(entry)
+    for entry in $(@xml).find 'entry'
+      e = new EntryAtom entry
       @entry[e.video_id] = e
 
     @b = $(@xml)
