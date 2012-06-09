@@ -8,16 +8,16 @@ Zombie = require 'zombie'
 
 
 class Movie
-  constructor : (string_of_id_or_unixtime) ->
-    @.set_type string_of_id_or_unixtime
+  constructor : (@provisional_id) ->
+    @type = get_type()
 
-  set_type : (string_of_id_or_unixtime) ->
-    if _(string_of_id_or_unixtime).startsWith 'nm'
-      @type = 'Niconico Movie Maker'
-    else if _(string_of_id_or_unixtime).startsWith 'sm'
-      @type = 'Smile Video'
-    else
-      @type = 'unknown'
-
+  get_type : ->
+    switch _(@provisional_id)
+      when startsWith 'nm'
+        'Niconico Movie Maker'
+      when startsWith 'sm'
+        'Smile Video'
+      else
+        'unknown'
 
 module.exports = Movie
