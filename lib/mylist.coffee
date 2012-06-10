@@ -5,7 +5,7 @@ _.str.include 'Underscore.string', 'string'
 
 $ = require 'jquery'
 
-Connection = require '../lib/connection'
+global.Connection = require '../lib/connection'
 MylistAtom = require '../lib/mylist_atom'
 
 
@@ -23,5 +23,10 @@ class Mylist
         callback @
 
   title : -> @xml.title
+  subtitle : -> @xml.subtitle
+  author : -> @xml.author
+  mylistId : -> @xml.mylist_id
+  updatedTime : -> @xml.updated
+  movies : ->
 
 module.exports = Mylist
