@@ -3,7 +3,7 @@ _.str = require 'underscore.string'
 _.mixin _.str.exports()
 _.str.include 'Underscore.string', 'string'
 $ = require 'jquery'
-MylistAtom = require '../lib/mylist_atom'
+MylistAtom = require '../source/mylist_atom'
 
 
 class TagSearchAtom extends MylistAtom

@@ -5,8 +5,8 @@ _.str.include 'Underscore.string', 'string'
 
 $ = require 'jquery'
 
-global.Connection = require '../lib/connection'
-MylistAtom = require '../lib/mylist_atom'
+global.Connection = require '../source/connection'
+MylistAtom = require '../source/mylist_atom'
 
 
 $ml = (mylist_id) ->

@@ -5,7 +5,7 @@ _.str.include 'Underscore.string', 'string'
 
 $ = require 'jquery'
 
-EntryAtom = require '../lib/entry_atom'
+EntryAtom = require '../source/entry_atom'
 
 
 class MylistAtom

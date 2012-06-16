@@ -3,7 +3,7 @@
   _.mixin _.str.exports()
   _.str.include 'Underscore.string', 'string'
   require 'should'
-  GetThumbInfo = require '../lib/getthumbinfo.coffee'
+  GetThumbInfo = require '../source/getthumbinfo.coffee'
 
   xml = '''
   <nicovideo_thumb_response status="ok">

@@ -5,8 +5,8 @@ _.str.include 'Underscore.string', 'string'
 
 $ = require 'jquery'
 
-Connection = require '../lib/connection'
-TagSearchAtom = require '../lib/tag_search_atom'
+Connection = require '../source/connection'
+TagSearchAtom = require '../source/tag_search_atom'
 
 
 class TagSearch

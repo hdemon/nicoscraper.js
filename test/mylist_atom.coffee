@@ -3,7 +3,7 @@ _.str = require 'underscore.string'
 _.mixin _.str.exports()
 _.str.include 'Underscore.string', 'string'
 require 'should'
-MylistAtom = require '../lib/mylist_atom.coffee'
+MylistAtom = require '../source/mylist_atom.coffee'
 
 xml = '''
 <?xml version="1.0" encoding="utf-8"?>

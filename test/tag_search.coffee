@@ -2,7 +2,7 @@ require 'should'
 sinon = require 'sinon'
 nock = require 'nock'
 
-TagSearch = require '../lib/tag_search.coffee'
+TagSearch = require '../source/tag_search.coffee'
 
 xml = '''
 <?xml version="1.0" encoding="utf-8"?>

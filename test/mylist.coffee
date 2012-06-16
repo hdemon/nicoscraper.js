@@ -7,7 +7,7 @@ require 'should'
 sinon = require 'sinon'
 fs = require 'fs'
 
-global.Mylist = require "#{__dirname}/../lib/mylist.coffee"
+global.Mylist = require "#{__dirname}/../source/mylist.coffee"
 
 
 describe "about Mylist class", ->

@@ -2,7 +2,7 @@ require 'should'
 sinon = require 'sinon'
 nock = require 'nock'
 
-Connection = require '../lib/connection.coffee'
+Connection = require '../source/connection.coffee'
 
 xml = '''
 <?xml version="1.0" encoding="utf-8"?>

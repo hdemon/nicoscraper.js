@@ -1,6 +1,6 @@
 require 'should'
 
-TagSearchAtom = require '../lib/tag_search_atom.coffee'
+TagSearchAtom = require '../source/tag_search_atom.coffee'
 
 xml = '''
 <?xml version="1.0" encoding="utf-8"?>
