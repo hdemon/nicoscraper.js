@@ -1,8 +1,15 @@
+_  = require 'underscore'
+_.str = require 'underscore.string'
+_.mixin _.str.exports()
+_.str.include 'Underscore.string', 'string'
+
 require 'should'
 sinon = require 'sinon'
 nock = require 'nock'
+fs = require 'fs'
 
-TagSearch = require '../source/tag_search.coffee'
+NicoQuery = require '../production/nicoquery.js'
+
 
 xml = '''
 <?xml version="1.0" encoding="utf-8"?>

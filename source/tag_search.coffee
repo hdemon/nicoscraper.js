@@ -1,22 +1,11 @@
-_  = require 'underscore'
-_.str = require 'underscore.string'
-_.mixin _.str.exports()
-_.str.include 'Underscore.string', 'string'
-
-$ = require 'jquery'
-
-Connection = require '../source/connection'
-TagSearchAtom = require '../source/tag_search_atom'
-
-
-class TagSearch
+class NicoQuery.TagSearch
   constructor : (@params={}, @callback) ->
     @page = @params.page || 1
     @search_string = @params.search_string || ''
     @params.sort_method = 'newness_of_comment'
     @params.order_param = 'desc'
 
-    connection = new Connection @uri(),
+    connection = new NicoQuery.Connection @uri(),
       success : (browser) =>
         info = new TagSearchAtom browser.window.document.innerHTML
         @callback info
@@ -57,5 +46,3 @@ class TagSearch
     switch @params.order_param
       when 'asc' then 'order=a'
       when 'desc' then null
-
-module.exports = TagSearch

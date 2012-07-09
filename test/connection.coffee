@@ -1,8 +1,14 @@
+_  = require 'underscore'
+_.str = require 'underscore.string'
+_.mixin _.str.exports()
+_.str.include 'Underscore.string', 'string'
+
 require 'should'
 sinon = require 'sinon'
 nock = require 'nock'
 
-Connection = require '../source/connection.coffee'
+NicoQuery = require '../production/nicoquery.js'
+
 
 xml = '''
 <?xml version="1.0" encoding="utf-8"?>
@@ -18,7 +24,7 @@ describe "About Connection class", ->
           .reply(200, xml)
 
     it "has a response body", (done) ->
-      new Connection 'http://www.nicovideo.jp/watch/sm123',
+      new NicoQuery.Connection 'http://www.nicovideo.jp/watch/sm123',
         success : (browser) ->
           browser.response[0].should.equal 200
 

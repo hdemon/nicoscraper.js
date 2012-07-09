@@ -1,12 +1,4 @@
-_  = require 'underscore'
-_.str = require 'underscore.string'
-_.mixin _.str.exports()
-_.str.include 'Underscore.string', 'string'
-$ = require 'jquery'
-MylistAtom = require '../source/mylist_atom'
-
-
-class TagSearchAtom extends MylistAtom
+class NicoQuery.TagSearchAtom extends NicoQuery.MylistAtom
   get_all_info : ->
     @get_tags()
     @get_updated_time()
@@ -16,5 +8,3 @@ class TagSearchAtom extends MylistAtom
                .substring("タグ ".length)
                .slice(0, -("‐ニコニコ動画".length))
                .split(" ")
-
-module.exports = TagSearchAtom

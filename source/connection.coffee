@@ -1,15 +1,7 @@
-_  = require 'underscore'
-_.str = require 'underscore.string'
-_.mixin _.str.exports()
-_.str.include 'Underscore.string', 'string'
-
-Zombie = require 'zombie'
-
-
-class Connection
+class NicoQuery.Connection
   constructor : (@uri, @callback) ->
     @callback.success ?= ->
-    @callback.failed ?= ->      
+    @callback.failed ?= ->
 
     zombie = new Zombie
     zombie.runScripts = false
@@ -31,6 +23,3 @@ class Connection
         when 503
           @callback.failed @error, @status
           @callback._503 @error, @status
-
-
-module.exports = Connection

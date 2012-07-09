@@ -1,12 +1,4 @@
-_  = require 'underscore'
-_.str = require 'underscore.string'
-_.mixin _.str.exports()
-_.str.include 'Underscore.string', 'string'
-
-$ = require 'jquery'
-
-
-class Movie
+class NicoQuery.Movie
   constructor : (@provisional_id) ->
     @type = get_type()
 
@@ -18,5 +10,3 @@ class Movie
         'Smile Video'
       else
         'unknown'
-
-module.exports = Movie

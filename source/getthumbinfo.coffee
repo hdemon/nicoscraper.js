@@ -1,12 +1,4 @@
-_  = require 'underscore'
-_.str = require 'underscore.string'
-_.mixin _.str.exports()
-_.str.include 'Underscore.string', 'string'
-
-$ = require 'jquery'
-
-
-class GetThumbInfo
+class NicoQuery.GetThumbInfo
   constructor : (@xml) ->
     b = $(@xml).find('thumb')
 
@@ -59,5 +51,3 @@ class GetThumbInfo
   _convert_to_unix_time : (string) ->
     s = string.match /\w+/g
     new Date(s[0], s[1] - 1, s[2], s[3], s[4], s[5], 0) / 1000
-
-module.exports = GetThumbInfo

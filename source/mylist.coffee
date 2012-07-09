@@ -1,25 +1,10 @@
-_  = require 'underscore'
-_.str = require 'underscore.string'
-_.mixin _.str.exports()
-_.str.include 'Underscore.string', 'string'
-
-$ = require 'jquery'
-
-global.Connection = require '../source/connection'
-MylistAtom = require '../source/mylist_atom'
-
-
-$ml = (mylist_id) ->
-  new Mylist mylist_id
-
-
-class Mylist
+class NicoQuery.Mylist
   constructor : (@mylist_id, callback) ->
     @uri = "http://www.nicovideo.jp/mylist/#{@mylist_id}?rss=atom"
 
-    connection = new Connection @uri,
+    connection = new NicoQuery.Connection @uri,
       success : (browser) =>
-        @xml = new MylistAtom browser.window.document.innerHTML
+        @xml = new NicoQuery.MylistAtom browser.window.document.innerHTML
         callback @
 
   title : -> @xml.title
@@ -28,5 +13,3 @@ class Mylist
   mylistId : -> @xml.mylist_id
   updatedTime : -> @xml.updated
   movies : ->
-
-module.exports = Mylist

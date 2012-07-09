@@ -1,6 +1,15 @@
-require 'should'
+_  = require 'underscore'
+_.str = require 'underscore.string'
+_.mixin _.str.exports()
+_.str.include 'Underscore.string', 'string'
 
-TagSearchAtom = require '../source/tag_search_atom.coffee'
+require 'should'
+sinon = require 'sinon'
+nock = require 'nock'
+fs = require 'fs'
+
+NicoQuery = require '../production/nicoquery.js'
+
 
 xml = '''
 <?xml version="1.0" encoding="utf-8"?>
@@ -470,7 +479,7 @@ xml = '''
 describe "About TagSearchAtom class", ->
   describe "when create an instance with a video id", ->
     before (done) ->
-      @search_page = new TagSearchAtom xml
+      @search_page = new NicoQuery.TagSearchAtom xml
       done()
 
     it "has a mylist property", ->

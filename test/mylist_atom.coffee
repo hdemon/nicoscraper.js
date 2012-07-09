@@ -2,8 +2,14 @@ _  = require 'underscore'
 _.str = require 'underscore.string'
 _.mixin _.str.exports()
 _.str.include 'Underscore.string', 'string'
+
 require 'should'
-MylistAtom = require '../source/mylist_atom.coffee'
+sinon = require 'sinon'
+nock = require 'nock'
+fs = require 'fs'
+
+NicoQuery = require '../production/nicoquery.js'
+
 
 xml = '''
 <?xml version="1.0" encoding="utf-8"?>
@@ -106,7 +112,7 @@ xml = '''
 describe "About MylistAtom class", ->
   describe "when create an instance", ->
     before (done) ->
-      @xml = new MylistAtom xml
+      @xml = new NicoQuery.MylistAtom xml
       done()
 
     it "has a mylist property", ->

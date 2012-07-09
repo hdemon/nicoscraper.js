@@ -1,18 +1,8 @@
-_  = require 'underscore'
-_.str = require 'underscore.string'
-_.mixin _.str.exports()
-_.str.include 'Underscore.string', 'string'
-
-$ = require 'jquery'
-
-EntryAtom = require '../source/entry_atom'
-
-
-class MylistAtom
+class NicoQuery.MylistAtom
   constructor : (@xml) ->
     @entry = {}
     for entry in $(@xml).find 'entry'
-      e = new EntryAtom entry
+      e = new NicoQuery.EntryAtom entry
       @entry[e.video_id] = e
 
     @b = $(@xml)
@@ -40,6 +30,3 @@ class MylistAtom
 
   get_author : ->
     @author = @b.find('author name').text()
-
-
-module.exports = MylistAtom

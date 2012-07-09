@@ -1,12 +1,4 @@
-_  = require 'underscore'
-_.str = require 'underscore.string'
-_.mixin _.str.exports()
-_.str.include 'Underscore.string', 'string'
-
-$ = require 'jquery'
-
-
-class EntryAtom
+class NicoQuery.EntryAtom
   constructor : (@body) ->
     @b = $(@body)
     @c = @b.find 'content'
@@ -63,4 +55,4 @@ class EntryAtom
     s = string.match /\w+/g
     new Date(s[0], s[1] - 1, s[2], s[3], s[4], s[5], 0) / 1000
 
-module.exports = EntryAtom
+module.exports = NicoQuery.EntryAtom
