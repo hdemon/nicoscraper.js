@@ -9,8 +9,6 @@ nock = require 'nock'
 fs = require 'fs'
 
 NicoQuery = require '../production/nicoquery.js'
-console.log "!!!"
-console.log NicoQuery
 
 describe "about Mylist class", ->
   describe "when create an instance with mylist id", ->
