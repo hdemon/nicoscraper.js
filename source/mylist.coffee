@@ -10,6 +10,6 @@ class NicoQuery.Mylist
   title : -> @xml.title
   subtitle : -> @xml.subtitle
   author : -> @xml.author
-  mylistId : -> @xml.mylist_id
+  mylistId : -> @xml.mylistId
   updatedTime : -> @xml.updated
   movies : ->

@@ -6,27 +6,27 @@ class NicoQuery.MylistAtom
       @entry[e.video_id] = e
 
     @b = $(@xml)
-    @get_all_info()
+    @getAllInfo()
     delete @b
 
-  get_all_info : ->
-    @get_title()
-    @get_subtitle()
-    @get_mylist_id()
-    @get_updated_time()
-    @get_author()
+  getAllInfo : ->
+    @title()
+    @subtitle()
+    @mylistId()
+    @updatedTime()
+    @author()
 
-  get_title : ->
+  title : ->
     @title = @b.find('title').eq(0).text().substring("マイリスト　".length).slice(0, -("‐ニコニコ動画".length))
 
-  get_subtitle : ->
+  subtitle : ->
     @subtitle = @b.find('subtitle').text()
 
-  get_mylist_id : ->
-    @mylist_id = Number @b.find('link').eq(0).attr('href').split('/')[4]
+  mylistId : ->
+    @mylistId = Number @b.find('link').eq(0).attr('href').split('/')[4]
 
-  get_updated_time : ->
+  updatedTime : ->
     @updated = @b.find('updated').eq(0).text()
 
-  get_author : ->
+  author : ->
     @author = @b.find('author name').text()
