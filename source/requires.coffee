@@ -5,5 +5,3 @@ _.str.include 'Underscore.string', 'string'
 $ = require 'jquery'
 Zombie = require 'zombie'
 
-NicoQuery = new Object
-

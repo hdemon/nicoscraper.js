@@ -1,0 +1,1 @@
+NicoQuery = new Object

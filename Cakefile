@@ -2,6 +2,10 @@ util = require 'util'
 fs = require 'fs'
 muffin = require 'muffin'
 
+requires = './source/requires.coffee'
+namespace = './source/namespace.coffee'
+exports = './source/exports.coffee'
+
 files = [
     './source/module.coffee'
   , './source/utility.coffee'
@@ -34,5 +38,5 @@ joinFiles = (files, targetFile) ->
   util.log 'Building'
   console.log files
   muffin.exec "cat #{files.join ' '} > #{targetFile}"
-  muffin.exec "cat ./source/requires.coffee #{targetFile} ./source/exports.coffee > ./production/tmp"
+  muffin.exec "cat #{requires} #{namespace} #{targetFile} #{exports} > ./production/tmp"
   muffin.exec "mv ./production/tmp #{targetFile}"
