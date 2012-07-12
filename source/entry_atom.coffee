@@ -1,4 +1,6 @@
-class NicoQuery.EntryAtom
+class NicoQuery.EntryAtom extends Module
+  @extend NicoQuery.Utility
+
   constructor : (@body) ->
     @b = $(@body)
     @c = @b.find 'content'
@@ -40,19 +42,9 @@ class NicoQuery.EntryAtom
     @description = @c.find('.nico-description').text()
 
   length : ->
-    @length = @convert_to_sec @c.find('.nico-info-length').text()
+    @length = @_convert_to_sec @c.find('.nico-info-length').text()
 
   info_date : ->
-    @info_date = @convert_to_unix_time @c.find('.nico-info-date').text()
-
-  convert_to_sec : (string) ->
-    s = string.split ':'
-    minute = Number s[0]
-    second = Number s[1]
-    minute * 60 + second
-
-  convert_to_unix_time : (string) ->
-    s = string.match /\w+/g
-    new Date(s[0], s[1] - 1, s[2], s[3], s[4], s[5], 0) / 1000
+    @info_date = @_convert_to_unix_time @c.find('.nico-info-date').text()
 
 module.exports = NicoQuery.EntryAtom

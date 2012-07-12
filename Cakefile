@@ -3,7 +3,9 @@ fs = require 'fs'
 muffin = require 'muffin'
 
 files = [
-    './source/connection.coffee'
+    './source/module.coffee'
+  , './source/utility.coffee'
+  , './source/connection.coffee'
   , './source/entry_atom.coffee'
   , './source/getthumbinfo.coffee'
   , './source/movie.coffee'
