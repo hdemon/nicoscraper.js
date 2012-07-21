@@ -1,4 +1,4 @@
-class NicoQuery.EntryAtom extends Module
+class NicoQuery.Source.EntryAtom extends Module
   @extend NicoQuery.Utility
 
   constructor : (@body) ->

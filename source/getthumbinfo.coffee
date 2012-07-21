@@ -1,4 +1,4 @@
-class NicoQuery.GetThumbInfo extends Module
+class NicoQuery.Source.GetThumbInfo extends Module
   @extend NicoQuery.Utility
 
   constructor : (@xml) ->

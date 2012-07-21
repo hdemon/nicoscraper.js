@@ -1,1 +1,2 @@
-NicoQuery = new Object
+NicoQuery = 
+  Source : {}

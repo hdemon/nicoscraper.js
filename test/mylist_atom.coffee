@@ -112,7 +112,7 @@ xml = '''
 describe "About MylistAtom class", ->
   describe "when create an instance", ->
     before (done) ->
-      @xml = new NicoQuery.MylistAtom xml
+      @xml = new NicoQuery.Source.MylistAtom xml
       done()
 
     it "has a mylist property", ->

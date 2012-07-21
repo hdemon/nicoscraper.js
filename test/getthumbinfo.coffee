@@ -52,7 +52,7 @@ xml = '''
 describe "About GetThumbInfo class", ->
   describe "when create an instance with a video id", ->
     before (done) ->
-      @xml = new NicoQuery.GetThumbInfo xml
+      @xml = new NicoQuery.Source.GetThumbInfo xml
       done()
 
     it "has title", ->

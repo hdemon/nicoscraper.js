@@ -4,7 +4,7 @@ class NicoQuery.Mylist
 
     connection = new NicoQuery.Connection @uri,
       success : (browser) =>
-        @xml = new NicoQuery.MylistAtom browser.window.document.innerHTML
+        @xml = new NicoQuery.Source.MylistAtom browser.window.document.innerHTML
         callback @
 
   title : -> @xml.title

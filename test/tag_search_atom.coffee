@@ -479,7 +479,7 @@ xml = '''
 describe "About TagSearchAtom class", ->
   describe "when create an instance with a video id", ->
     before (done) ->
-      @search_page = new NicoQuery.TagSearchAtom xml
+      @search_page = new NicoQuery.Source.TagSearchAtom xml
       done()
 
     it "has a mylist property", ->

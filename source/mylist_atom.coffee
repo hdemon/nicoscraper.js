@@ -1,8 +1,8 @@
-class NicoQuery.MylistAtom
+class NicoQuery.Source.MylistAtom
   constructor : (@xml) ->
     @entry = {}
     for entry in $(@xml).find 'entry'
-      e = new NicoQuery.EntryAtom entry
+      e = new NicoQuery.Source.EntryAtom entry
       @entry[e.video_id] = e
 
     @b = $(@xml)
