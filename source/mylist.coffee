@@ -1,15 +1,23 @@
 class NicoQuery.Mylist
-  constructor : (@mylist_id, callback) ->
-    @uri = "http://www.nicovideo.jp/mylist/#{@mylist_id}?rss=atom"
+  constructor : (@mylist_id) ->
+    @uri = "http://www.nicovideo.jp/mylist/#{@mylist_id}"
 
-    connection = new NicoQuery.Connection @uri,
+    @source =
+      atom : {}
+      html : {}
+
+  getAtom : (callback) ->
+    connection = new NicoQuery.Connection @uri + "?rss=atom",
       success : (browser) =>
-        @xml = new NicoQuery.Source.MylistAtom browser.window.document.innerHTML
+        @source.atom = new NicoQuery.Source.MylistAtom browser.window.document.innerHTML
+        console.log "callback"
         callback @
 
-  title : -> @xml.title
-  subtitle : -> @xml.subtitle
-  author : -> @xml.author
-  mylistId : -> @xml.mylistId
-  updatedTime : -> @xml.updated
+  getHtml : ->
+
+  title : -> @source.atom.title
+  subtitle : -> @source.atom.subtitle
+  author : -> @source.atom.author
+  mylistId : -> @source.atom.mylistId
+  updatedTime : -> @source.atom.updated
   movies : ->

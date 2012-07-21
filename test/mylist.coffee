@@ -11,15 +11,22 @@ fs = require 'fs'
 NicoQuery = require '../production/nicoquery.js'
 
 describe "about Mylist class", ->
+  before (done) ->
+    data = fs.readFileSync "./test/mylist_26121590.xml"
+    fixture = { window : { document : { innerHTML : data.toString 'ascii' }}}
+
+    sinon.stub(NicoQuery, "Connection").yieldsTo "success", fixture
+    @ml = new NicoQuery.Mylist 26121590
+
+    done()
+
   describe "when create an instance with mylist id", ->
+    it "has mylist uri string", ->
+      # @url.should.match /http¥:¥/¥/www¥.nicovideo¥.jp¥/mylist/
+
+  describe "#getAtom", ->
     before (done) ->
-      data = fs.readFileSync "./test/mylist_26121590.xml"
-      fixture = { window : { document : { innerHTML : data.toString 'ascii' }}}
-
-      sinon.stub(NicoQuery, "Connection").yieldsTo "success", fixture
-
-      new NicoQuery.Mylist 26121590, (mylist_obj) =>
-        @ml = mylist_obj
+      @ml.getAtom ->
         done()
 
     it "returns a mylist object", ->
