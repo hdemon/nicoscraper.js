@@ -20,6 +20,9 @@ describe "about Mylist class", ->
 
     done()
 
+  after ->
+    NicoQuery.Connection.restore()
+
   describe "when create an instance with mylist id", ->
     it "has mylist uri string", ->
       # @url.should.match /http¥:¥/¥/www¥.nicovideo¥.jp¥/mylist/
