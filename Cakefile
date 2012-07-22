@@ -1,6 +1,9 @@
 util = require 'util'
 fs = require 'fs'
+watchr = require 'watchr'
 muffin = require 'muffin'
+_ = require 'underscore'
+exec = (require 'child_process').exec
 
 requires = './source/requires.coffee'
 namespace = './source/namespace.coffee'
@@ -30,9 +33,18 @@ task 'build', 'compile muffin', (options) ->
         target = "./production/#{matches[0]}"
         console.log "cat ./source/requires.coffee #{target} ./source/exports.coffee > ./production/tmp"
 
-
         muffin.compileScript "#{target}", 'production/nicoquery.js', options
 
+task 'test', 'test by mocha', (options) ->
+  watchr.watch
+    path: "./source"
+    listener: (eventName,filePath) ->
+      child = exec "mocha -R spec --compilers coffee:coffee-script -t 10000 ./test/#{getFileName(filePath)}", (error, stdout, stderr) ->
+        console.log('stdout: ' + stdout);
+        console.log('stderr: ' + stderr);
+
+getFileName = (filePath) ->
+  _.last (filePath.split '/')
 
 joinFiles = (files, targetFile) ->
   util.log 'Building'
