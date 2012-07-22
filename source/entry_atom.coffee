@@ -5,38 +5,38 @@ class NicoQuery.Source.EntryAtom extends Module
     @b = $(@body)
     @c = @b.find 'content'
 
-    @get_all_info()
+    @getAllInfo()
 
     @b = @c = null
 
-  get_all_info : ->
+  getAllInfo : ->
     @title()
-    @video_id()
-    @timelike_id()
-    @published_time()
-    @updated_time()
-    @thumbnail_url()
+    @videoId()
+    @timelikeId()
+    @publishedTime()
+    @updatedTime()
+    @thumbnailUrl()
     @description()
     @length()
-    @info_date()
+    @infoDate()
 
   title : ->
     @title = @b.find('title').text()
 
-  video_id : ->
-    @video_id = @b.find('link').attr('href').split('/')[4]
+  videoId : ->
+    @videoId = @b.find('link').attr('href').split('/')[4]
 
-  timelike_id : ->
-    @timelike_id = Number @b.find('id').text().split(',')[1].split(':')[1].split('/')[2]
+  timelikeId : ->
+    @timelikeId = Number @b.find('id').text().split(',')[1].split(':')[1].split('/')[2]
 
-  published_time : ->
+  publishedTime : ->
     @published = @b.find('published').text()
 
-  updated_time : ->
+  updatedTime : ->
     @updated = @b.find('updated').text()
 
-  thumbnail_url : ->
-    @thumbnail_url = @c.find('img').attr('src')
+  thumbnailUrl : ->
+    @thumbnailUrl = @c.find('img').attr('src')
 
   description : ->
     @description = @c.find('.nico-description').text()
@@ -44,7 +44,7 @@ class NicoQuery.Source.EntryAtom extends Module
   length : ->
     @length = @_convert_to_sec @c.find('.nico-info-length').text()
 
-  info_date : ->
-    @info_date = @_convert_to_unix_time @c.find('.nico-info-date').text()
+  infoDate : ->
+    @infoDate = @_convert_to_unix_time @c.find('.nico-info-date').text()
 
 module.exports = NicoQuery.EntryAtom

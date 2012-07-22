@@ -29,7 +29,6 @@ class NicoQuery.Movie
   title : ->
     @source.getThumbInfo.title
 
-
   description : ->
     @source.getThumbInfo.description
 

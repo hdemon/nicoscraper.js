@@ -1,26 +1,26 @@
 class NicoQuery.TagSearch
   constructor : (@params={}, @callback) ->
     @page = @params.page || 1
-    @search_string = @params.search_string || ''
-    @params.sort_method = 'newness_of_comment'
-    @params.order_param = 'desc'
+    @searchString = @params.searchString || ''
+    @params.sortMethod = 'newness_of_comment'
+    @params.orderParam = 'desc'
 
     connection = new NicoQuery.Connection @uri(),
       success : (browser) =>
         info = new TagSearchAtom browser.window.document.innerHTML
         @callback info
 
-  uri : -> @host() + @path() + '?' + @query_param()
+  uri : -> @host() + @path() + '?' + @queryParam()
 
   host : -> 'http://www.nicovideo.jp/'
 
-  path : -> "tag/#{@search_string}"
+  path : -> "tag/#{@searchString}"
 
-  query_param : ->
+  queryParam : ->
     param = []
-    param.push page_param()
-    param.push sort_param() if sort_param()?
-    param.push order_param() if order_param()?
+    param.push pageParam()
+    param.push sortParam() if sortParam()?
+    param.push orderParam() if orderParam()?
     param.push 'rss=atom'
 
     param.join '&'
@@ -31,10 +31,10 @@ class NicoQuery.TagSearch
   prev : ->
     @page -= 1
 
-  _page_param : -> "page=#{@page}"
+  pageParam : -> "page=#{@page}"
 
-  _sort_param : ->
-    switch @params.sort_method
+  sortParam : ->
+    switch @params.sortMethod
       when 'newness_of_comment' then null
       when 'view_num' then 'sort=v'
       when 'comment_num' then 'sort=r'
@@ -42,7 +42,7 @@ class NicoQuery.TagSearch
       when 'published_date' then 'sort=f'
       when 'length' then 'sort=l'
 
-  _order_param : ->
-    switch @params.order_param
+  orderParam : ->
+    switch @params.orderParam
       when 'asc' then 'order=a'
       when 'desc' then null

@@ -6,24 +6,24 @@ class NicoQuery.Source.GetThumbInfo extends Module
 
     @title = b.find('title').text()
     @description = b.find('description').text()
-    @thumbnail_url = b.find('thumbnail_url').text()
-    @first_retrieve = b.find('first_retrieve').text()
+    @thumbnailUrl = b.find('thumbnail_url').text()
+    @firstRetrieve = b.find('first_retrieve').text()
     @length = @_convert_to_sec b.find('length').text()
-    @movie_type = b.find('movie_type').text()
-    @size_high = Number b.find('size_high').text()
-    @size_low = Number b.find('size_low').text()
-    @view_counter = Number b.find('view_counter').text()
-    @comment_num = Number b.find('comment_num').text()
-    @mylist_counter = Number b.find('mylist_counter').text()
-    @last_res_body = b.find('last_res_body name').text()
-    @watch_url = b.find('watch_url').text()
-    @thumb_type = b.find('thumb_type').eq(0).text()
+    @movieType = b.find('movie_type').text()
+    @sizeHigh = Number b.find('size_high').text()
+    @sizeLow = Number b.find('size_low').text()
+    @viewCounter = Number b.find('view_counter').text()
+    @commentNum = Number b.find('comment_num').text()
+    @mylistCounter = Number b.find('mylist_counter').text()
+    @lastResBody = b.find('last_res_body').text()
+    @watchUrl = b.find('watch_url').text()
+    @thumbType = b.find('thumb_type').eq(0).text()
     @embeddable = Number b.find('embeddable').text()
-    @no_live_play = Number b.find('no_live_play').text()
+    @noLivePlay = Number b.find('no_live_play').text()
 
-    @tags = @_parse_tags()
+    @tags = @_parseTags()
 
-  _parse_tags : ->
+  _parseTags : ->
     xml_jp = $(@xml).find('tags[domain=jp]')
     xml_tw = $(@xml).find('tags[domain=tw]')
 

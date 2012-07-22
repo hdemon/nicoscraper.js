@@ -3,7 +3,7 @@ class NicoQuery.Source.MylistAtom
     @entry = {}
     for entry in $(@xml).find 'entry'
       e = new NicoQuery.Source.EntryAtom entry
-      @entry[e.video_id] = e
+      @entry[e.videoId] = e
 
     @b = $(@xml)
 

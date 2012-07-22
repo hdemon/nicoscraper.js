@@ -479,18 +479,18 @@ xml = '''
 describe "About TagSearchAtom class", ->
   describe "when create an instance with a video id", ->
     before (done) ->
-      @search_page = new NicoQuery.Source.TagSearchAtom xml
+      @searchPage = new NicoQuery.Source.TagSearchAtom xml
       done()
 
     it "has a mylist property", ->
-      @search_page.tags.should.include 'ゆっくり実況プレイpart1リンク'
-      @search_page.updated.should.equal '2012-05-19T22:10:25+09:00'
+      @searchPage.tags.should.include 'ゆっくり実況プレイpart1リンク'
+      @searchPage.updated.should.equal '2012-05-19T22:10:25+09:00'
 
     it "has movies property in this mylist", ->
-      @search_page.entry['sm17854700'].title.should.equal '【ゆっくり実況】月風魔伝　その1'
-      @search_page.entry['sm17854700'].video_id.should.equal 'sm17854700'
-      # @search_page.entry['sm17854700'].timelike_id.should.equal
-      @search_page.entry['sm17854700'].thumbnail_url.should.equal 'http://tn-skr1.smilevideo.jp/smile?i=17854700'
-      @search_page.entry['sm17854700'].description.should.equal '戻って参りました。頑張らせていただきます！月風魔伝ゆっくり実況まとめ→mylist/32058660単発まとめ→mylist/25326423シリーズ物part1まとめ→mylist/28984'
-      @search_page.entry['sm17854700'].length.should.equal 520
-      @search_page.entry['sm17854700'].info_date.should.equal 1337330705
+      @searchPage.entry['sm17854700'].title.should.equal '【ゆっくり実況】月風魔伝　その1'
+      @searchPage.entry['sm17854700'].videoId.should.equal 'sm17854700'
+      # @searchPage.entry['sm17854700'].timelike_id.should.equal
+      @searchPage.entry['sm17854700'].thumbnailUrl.should.equal 'http://tn-skr1.smilevideo.jp/smile?i=17854700'
+      @searchPage.entry['sm17854700'].description.should.equal '戻って参りました。頑張らせていただきます！月風魔伝ゆっくり実況まとめ→mylist/32058660単発まとめ→mylist/25326423シリーズ物part1まとめ→mylist/28984'
+      @searchPage.entry['sm17854700'].length.should.equal 520
+      @searchPage.entry['sm17854700'].infoDate.should.equal 1337330705

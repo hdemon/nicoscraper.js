@@ -62,43 +62,43 @@ describe "About GetThumbInfo class", ->
       @xml.description.should.equal 'おっさんの生き様をとくとごらんあれ！このミリオンをいつまでも大切にしたい。そう、いつまでも・・・。おっさんがここまでこれたのも、みなさまのおかげですｍ（＿＿）ｂ次回：sm8506034　マイリス：mylist/15196568【重要】この動画ではPC版Oblivionでしか表現できないシーンが含まれます。このゲームにご興味のある方はご注意ください。'
 
     it "has thumbnail_url", ->
-      @xml.thumbnail_url.should.equal 'http://tn-skr4.smilevideo.jp/smile?i=8481759'
+      @xml.thumbnailUrl.should.equal 'http://tn-skr4.smilevideo.jp/smile?i=8481759'
 
     it "has first retrieve", ->
-      @xml.first_retrieve.should.equal '2009-10-11T14:15:35+09:00'
+      @xml.firstRetrieve.should.equal '2009-10-11T14:15:35+09:00'
 
     it "has length", ->
       @xml.length.should.equal 748
 
     it "has movie type", ->
-      @xml.movie_type.should.equal 'mp4'
+      @xml.movieType.should.equal 'mp4'
 
     it "has size", ->
-      @xml.size_high.should.equal 57024573
+      @xml.sizeHigh.should.equal 57024573
 
     it "has title", ->
-      @xml.size_low.should.equal 40574829
+      @xml.sizeLow.should.equal 40574829
 
     it "has view count", ->
-      @xml.view_counter.should.equal 1765214
+      @xml.viewCounter.should.equal 1765214
 
     it "has comment count", ->
-      @xml.comment_num.should.equal 66152
+      @xml.commentNum.should.equal 66152
 
     it "has mylist count", ->
-      @xml.mylist_counter.should.equal 39026
+      @xml.mylistCounter.should.equal 39026
 
     it "has watch url", ->
-      @xml.watch_url.should.equal 'http://www.nicovideo.jp/watch/sm8481759'
+      @xml.watchUrl.should.equal 'http://www.nicovideo.jp/watch/sm8481759'
 
     it "has thumbnail type", ->
-      @xml.thumb_type.should.equal 'video'
+      @xml.thumbType.should.equal 'video'
 
     it "has embeddable flag", ->
       @xml.embeddable.should.equal 1
 
     it "has live play", ->
-      @xml.no_live_play.should.equal 0
+      @xml.noLivePlay.should.equal 0
 
     it "has a tag list", ->
       @xml.tags.jp[0].category.should.equal 1
