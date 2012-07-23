@@ -112,4 +112,4 @@ describe "About GetThumbInfo class", ->
       @xml.tags.jp[6].string.should.equal '笑撃のラスト'
       @xml.tags.jp[7].string.should.equal 'ゆっくり実況プレイ'
       @xml.tags.jp[8].string.should.equal 'ゆっくり実況プレイpart1リンク'
-      # @xml.tags.tw[0].string.should.equal '翻譯希望'
+      @xml.tags.tw[0].string.should.equal '翻譯希望'

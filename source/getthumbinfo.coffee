@@ -24,10 +24,12 @@ class NicoQuery.Source.GetThumbInfo extends Module
     @tags = @_parseTags()
 
   _parseTags : ->
-    xml_jp = $(@xml).find('tags[domain=jp]')
-    xml_tw = $(@xml).find('tags[domain=tw]')
+    xml = $(@xml)
 
-    { 'jp' : @_objectize xml_jp }
+    xmlJp = xml.find('tags[domain=jp]')
+    xmlTw = xml.find('tags[domain=tw]')
+
+    { 'jp' : @_objectize(xmlJp), 'tw' : @_objectize(xmlTw) }
 
   _objectize : (xml) ->
     array = []
