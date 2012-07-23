@@ -8,7 +8,7 @@ class NicoQuery.Source.GetThumbInfo extends Module
     @description = b.find('description').text()
     @thumbnailUrl = b.find('thumbnail_url').text()
     @firstRetrieve = b.find('first_retrieve').text()
-    @length = @_convert_to_sec b.find('length').text()
+    @length = @_convertToSec b.find('length').text()
     @movieType = b.find('movie_type').text()
     @sizeHigh = Number b.find('size_high').text()
     @sizeLow = Number b.find('size_low').text()
