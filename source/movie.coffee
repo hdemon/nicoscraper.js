@@ -1,6 +1,5 @@
 class NicoQuery.Movie
   constructor : (@provisional_id) ->
-    @type = @getType()
     @source =
       getThumbInfo: {}
       mylistAtom: {}
@@ -11,7 +10,6 @@ class NicoQuery.Movie
     connection = new NicoQuery.Connection @uri + "?rss=atom",
       success : (browser) =>
         @source.getThumbInfo = new NicoQuery.Source.GetThumbInfo browser.window.document.innerHTML
-        console.log "callback"
         callback @
 
   getType : ->
