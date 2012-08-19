@@ -24,22 +24,39 @@ class NicoQuery.Movie
         'unknown'
 
   videoId : ->
-    @provisional_id
+    @provisional_id or
+    @source.mylistAtom.videoId
+
+  threadId : ->
+    @source.mylistAtom.threadId
 
   title : ->
-    @source.getThumbInfo.title
+    @source.getThumbInfo.title or
+    @source.mylistAtom.title
 
   description : ->
-    @source.getThumbInfo.description
+    @source.getThumbInfo.description or
+    @source.mylistAtom.description
 
   thumbnailUrl : ->
-    @source.getThumbInfo.thumbnailUrl
+    @source.getThumbInfo.thumbnailUrl or
+    @source.mylistAtom.thumbnailUrl
 
   firstRetrieve : ->
     @source.getThumbInfo.firstRetrieve
 
+  published : ->
+    @source.getThumbInfo.published
+
+  updated : ->
+    @source.getThumbInfo.updated
+
+  infoDate : ->
+    @source.getThumbInfo.infoDate
+
   length : ->
-    @source.getThumbInfo.length
+    @source.getThumbInfo.length or
+    @source.mylistAtom.length
 
   movieType : ->
     @source.getThumbInfo.movieType
