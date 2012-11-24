@@ -1,11 +1,11 @@
-class NicoQuery.TagSearch
+class NicoScraper.TagSearch
   constructor : (@params={}, @callback) ->
     @page = @params.page || 1
     @searchString = @params.searchString || ''
     @params.sortMethod = 'newness_of_comment'
     @params.orderParam = 'desc'
 
-    connection = new NicoQuery.Connection @uri(),
+    connection = new NicoScraper.Connection @uri(),
       success : (browser) =>
         info = new TagSearchAtom browser.window.document.innerHTML
         @callback info

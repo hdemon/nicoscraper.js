@@ -1,4 +1,4 @@
-class NicoQuery.Movie
+class NicoScraper.Movie
   constructor : (@provisional_id) ->
     @source =
       getThumbInfo: {}
@@ -7,9 +7,9 @@ class NicoQuery.Movie
       html: {}
 
   getAtom : (callback) ->
-    connection = new NicoQuery.Connection @uri + "?rss=atom",
+    connection = new NicoScraper.Connection @uri + "?rss=atom",
       success : (browser) =>
-        @source.getThumbInfo = new NicoQuery.Source.GetThumbInfo browser.window.document.innerHTML
+        @source.getThumbInfo = new NicoScraper.Source.GetThumbInfo browser.window.document.innerHTML
         callback @
 
   getType : ->

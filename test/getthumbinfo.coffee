@@ -7,7 +7,7 @@ require 'should'
 sinon = require 'sinon'
 nock = require 'nock'
 
-NicoQuery = require '../production/nicoquery.js'
+NicoScraper = require '../production/nicoquery.js'
 
 
 xml = '''
@@ -52,7 +52,7 @@ xml = '''
 describe "About GetThumbInfo class", ->
   describe "when create an instance with a video id", ->
     before (done) ->
-      @xml = new NicoQuery.Source.GetThumbInfo xml
+      @xml = new NicoScraper.Source.GetThumbInfo xml
       done()
 
     it "has title", ->

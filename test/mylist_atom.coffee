@@ -8,7 +8,7 @@ sinon = require 'sinon'
 nock = require 'nock'
 fs = require 'fs'
 
-NicoQuery = require '../production/nicoquery.js'
+NicoScraper = require '../production/nicoquery.js'
 
 
 xml = '''
@@ -112,7 +112,7 @@ xml = '''
 describe "About MylistAtom class", ->
   describe "when create an instance", ->
     before (done) ->
-      @xml = new NicoQuery.Source.MylistAtom xml
+      @xml = new NicoScraper.Source.MylistAtom xml
       done()
 
     it "has a mylist property", ->

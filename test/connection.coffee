@@ -7,7 +7,7 @@ require 'should'
 sinon = require 'sinon'
 nock = require 'nock'
 
-NicoQuery = require '../production/nicoquery.js'
+NicoScraper = require '../production/nicoquery.js'
 
 
 xml = '''
@@ -24,7 +24,7 @@ describe "About Connection class", ->
           .reply(200, xml)
 
     it "has a response body", (done) ->
-      new NicoQuery.Connection 'http://www.nicovideo.jp/watch/sm123',
+      new NicoScraper.Connection 'http://www.nicovideo.jp/watch/sm123',
         success : (browser) ->
           browser.response[0].should.equal 200
 

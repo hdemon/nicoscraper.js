@@ -1,4 +1,4 @@
-class NicoQuery.Mylist
+class NicoScraper.Mylist
   constructor : (@mylist_id) ->
     @uri = "http://www.nicovideo.jp/mylist/#{@mylist_id}"
 
@@ -7,9 +7,9 @@ class NicoQuery.Mylist
       html : {}
 
   getAtom : (callback) ->
-    connection = new NicoQuery.Connection @uri + "?rss=atom",
+    connection = new NicoScraper.Connection @uri + "?rss=atom",
       success : (browser) =>
-        @source.atom = new NicoQuery.Source.MylistAtom browser.window.document.innerHTML
+        @source.atom = new NicoScraper.Source.MylistAtom browser.window.document.innerHTML
         console.log "callback"
         callback @
 

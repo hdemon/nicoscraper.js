@@ -3,4 +3,4 @@ _.str = require 'underscore.string'
 _.mixin _.str.exports()
 _.str.include 'Underscore.string', 'string'
 $ = require 'cheerio'
-Zombie = require 'zombie'
+request = require 'request'

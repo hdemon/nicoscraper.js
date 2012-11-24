@@ -1,5 +1,5 @@
-class NicoQuery.Source.GetThumbInfo extends Module
-  @extend NicoQuery.Utility
+class NicoScraper.Source.GetThumbInfo extends Module
+  @extend NicoScraper.Utility
 
   constructor : (@xml) ->
     b = $(@xml).find('thumb')

@@ -8,20 +8,20 @@ sinon = require 'sinon'
 nock = require 'nock'
 fs = require 'fs'
 
-NicoQuery = require '../production/nicoquery.js'
+NicoScraper = require '../production/nicoquery.js'
 
 describe "about Movie class", ->
   before (done) ->
     data = fs.readFileSync "./test/getthumbinfo_sm17836499.xml"
     fixture = { window : { document : { innerHTML : data.toString 'ascii' }}}
 
-    sinon.stub(NicoQuery, "Connection").yieldsTo "success", fixture
-    @mv = new NicoQuery.Movie "sm17836499"
+    sinon.stub(NicoScraper, "Connection").yieldsTo "success", fixture
+    @mv = new NicoScraper.Movie "sm17836499"
 
     done()
 
   after ->
-    NicoQuery.Connection.restore()
+    NicoScraper.Connection.restore()
 
   describe "when create an instance", ->
     it "has mylist uri string", ->

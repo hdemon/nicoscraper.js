@@ -1,8 +1,8 @@
-class NicoQuery.Source.TagSearchAtom
+class NicoScraper.Source.TagSearchAtom
   constructor : (@xml) ->
     @entry = {}
     for entry in $(@xml).find 'entry'
-      e = new NicoQuery.Source.EntryAtom entry
+      e = new NicoScraper.Source.EntryAtom entry
       @entry[e.videoId] = e
 
     @b = $(@xml)

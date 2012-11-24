@@ -1,4 +1,4 @@
-class NicoQuery.Utility
+class NicoScraper.Utility
   _convertToSec : (string) ->
     s = string.split ':'
     minute = Number s[0]

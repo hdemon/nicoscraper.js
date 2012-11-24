@@ -8,7 +8,7 @@ sinon = require 'sinon'
 nock = require 'nock'
 fs = require 'fs'
 
-NicoQuery = require '../production/nicoquery.js'
+NicoScraper = require '../production/nicoquery.js'
 
 
 xml = '''
@@ -479,7 +479,7 @@ xml = '''
 describe "About TagSearchAtom class", ->
   describe "when create an instance with a video id", ->
     before (done) ->
-      @searchPage = new NicoQuery.Source.TagSearchAtom xml
+      @searchPage = new NicoScraper.Source.TagSearchAtom xml
       done()
 
     it "has a mylist property", ->

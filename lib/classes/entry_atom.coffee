@@ -1,5 +1,5 @@
-class NicoQuery.Source.EntryAtom extends Module
-  @extend NicoQuery.Utility
+class NicoScraper.Source.EntryAtom extends Module
+  @extend NicoScraper.Utility
 
   constructor : (@body) ->
     @b = $(@body)
@@ -15,4 +15,4 @@ class NicoQuery.Source.EntryAtom extends Module
     @length = @_convertToSec @c.find('.nico-info-length').text()
     @infoDate = @_convertToUnixTime @c.find('.nico-info-date').text()
 
-module.exports = NicoQuery.EntryAtom
+module.exports = NicoScraper.EntryAtom
