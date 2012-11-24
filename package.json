@@ -5,23 +5,25 @@
   "scripts": {
     "test": "mocha -R spec --compilers coffee:coffee-script -t 10000"
   },
+
   "dependencies": {
     "coffee-script":  "1.2.x",
-    "muffin":         ">= 0.0.1",
-    "watchr":         "2.1.2",
+    "muffin":         "latest",
+    "watchr":         "latest",
 
-    "zombie":         "0.12.x",
     "mocha":          "1.0.x",
     "sinon":          "1.3.x",
     "nock":           ">= 0.0.1",
     "should":         ">= 0.0.1",
 
-    "jquery":         ">= 0.0.1",
+    "cheerio":        "latest",
+    "request":        "latest",
     "underscore":     ">= 0.0.1",
     "underscore.string": ">= 0.0.1",
     "async":          ">= 0.0.1"
   },
+
   "engines": {
-    "node": "0.6.xx"
+    "node": "0.8.xx"
   }
 }
