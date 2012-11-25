@@ -1,4 +1,4 @@
-var $, request, _;
+var $, httpsync, _;
 
 _ = require('underscore');
 
@@ -10,12 +10,16 @@ _.str.include('Underscore.string', 'string');
 
 $ = require('cheerio');
 
-request = require('request');
+httpsync = require('httpsync');
 
 var NicoScraper;
 
 NicoScraper = {
-  Source: {}
+  MylistAtom: {
+    Entry: {}
+  },
+  Movie: {},
+  Mylist: {}
 };
 
 var Module, moduleKeywords,
@@ -56,33 +60,27 @@ Module = (function() {
 
 NicoScraper.Connection = (function() {
 
-  function Connection(uri, callback) {
-    var request, _base, _base1, _ref, _ref1,
-      _this = this;
+  function Connection(uri) {
+    var resource, response;
     this.uri = uri;
-    this.callback = callback;
-    if ((_ref = (_base = this.callback).success) == null) {
-      _base.success = function() {};
+    response = httpsync.get(this.uri).end();
+    switch (response.statusCode) {
+      case 200:
+        resource = response.data.toString();
+        break;
+      case 404:
+        "";
+
+        break;
+      case 500:
+        "";
+
+        break;
+      case 503:
+        "";
+
     }
-    if ((_ref1 = (_base1 = this.callback).failed) == null) {
-      _base1.failed = function() {};
-    }
-    request = new request;
-    request(this.uri, function(error, response, body) {
-      switch (response.statusCode) {
-        case 200:
-          return _this.callback.success(body);
-        case 404:
-          _this.callback.failed;
-          return _this.callback._404;
-        case 500:
-          _this.callback.failed;
-          return _this.callback._500;
-        case 503:
-          _this.callback.failed;
-          return _this.callback._503;
-      }
-    });
+    return resource;
   }
 
   return Connection;
@@ -92,80 +90,182 @@ NicoScraper.Connection = (function() {
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-NicoScraper.Source.EntryAtom = (function(_super) {
+NicoScraper.MylistAtom.Entry = (function(_super) {
 
-  __extends(EntryAtom, _super);
+  __extends(Entry, _super);
 
-  EntryAtom.extend(NicoScraper.Utility);
+  Entry.extend(NicoScraper.Utility);
 
-  function EntryAtom(body) {
+  function Entry(body) {
     this.body = body;
-    this.b = $(this.body);
-    this.c = this.b.find('content');
-    this.title = this.b.find('title').text();
-    this.videoId = this.b.find('link').attr('href').split('/')[4];
-    this.timelikeId = Number(this.b.find('id').text().split(',')[1].split(':')[1].split('/')[2]);
-    this.published = this.b.find('published').text();
-    this.updated = this.b.find('updated').text();
-    this.thumbnailUrl = this.c.find('img').attr('src');
-    this.description = this.c.find('.nico-description').text();
-    this.length = this._convertToSec(this.c.find('.nico-info-length').text());
-    this.infoDate = this._convertToUnixTime(this.c.find('.nico-info-date').text());
   }
 
-  return EntryAtom;
+  Entry.prototype.content = function() {
+    var _ref;
+    return (_ref = this._content) != null ? _ref : this._content = this.body.find('content');
+  };
+
+  Entry.prototype.title = function() {
+    var _ref;
+    return (_ref = this._title) != null ? _ref : this._title = this.body.find('title').text();
+  };
+
+  Entry.prototype.videoId = function() {
+    var _ref;
+    return (_ref = this._videoId) != null ? _ref : this._videoId = this.body.find('link').attr('href').split('/')[4];
+  };
+
+  Entry.prototype.timelikeId = function() {
+    var _ref;
+    return (_ref = this._timelikeId) != null ? _ref : this._timelikeId = Number(this.body.find('id').text().split(',')[1].split(':')[1].split('/')[2]);
+  };
+
+  Entry.prototype.published = function() {
+    var _ref;
+    return (_ref = this._published) != null ? _ref : this._published = this.body.find('published').text();
+  };
+
+  Entry.prototype.updated = function() {
+    var _ref;
+    return (_ref = this._updated) != null ? _ref : this._updated = this.body.find('updated').text();
+  };
+
+  Entry.prototype.thumbnailUrl = function() {
+    var _ref;
+    return (_ref = this._thumbnailUrl) != null ? _ref : this._thumbnailUrl = this.content().find('img').attr('src');
+  };
+
+  Entry.prototype.description = function() {
+    var _ref;
+    return (_ref = this._description) != null ? _ref : this._description = this.content().find('.nico-description').text();
+  };
+
+  Entry.prototype.length = function() {
+    var _ref;
+    return (_ref = this._length) != null ? _ref : this._length = this._convertToSec(this.content().find('.nico-info-length').text());
+  };
+
+  Entry.prototype.infoDate = function() {
+    var _ref;
+    return (_ref = this._infoDate) != null ? _ref : this._infoDate = this._convertToUnixTime(this.content().find('.nico-info-date').text());
+  };
+
+  return Entry;
 
 })(Module);
-
-module.exports = NicoScraper.EntryAtom;
 
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-NicoScraper.Source.GetThumbInfo = (function(_super) {
+NicoScraper.GetThumbInfo = (function(_super) {
 
   __extends(GetThumbInfo, _super);
 
   GetThumbInfo.extend(NicoScraper.Utility);
 
-  function GetThumbInfo(xml) {
-    var b;
-    this.xml = xml;
-    b = $(this.xml).find('thumb');
-    this.title = b.find('title').text();
-    this.description = b.find('description').text();
-    this.thumbnailUrl = b.find('thumbnail_url').text();
-    this.firstRetrieve = b.find('first_retrieve').text();
-    this.length = this._convertToSec(b.find('length').text());
-    this.movieType = b.find('movie_type').text();
-    this.sizeHigh = Number(b.find('size_high').text());
-    this.sizeLow = Number(b.find('size_low').text());
-    this.viewCounter = Number(b.find('view_counter').text());
-    this.commentNum = Number(b.find('comment_num').text());
-    this.mylistCounter = Number(b.find('mylist_counter').text());
-    this.lastResBody = b.find('last_res_body').text();
-    this.watchUrl = b.find('watch_url').text();
-    this.thumbType = b.find('thumb_type').eq(0).text();
-    this.embeddable = Number(b.find('embeddable').text());
-    this.noLivePlay = Number(b.find('no_live_play').text());
-    this.tags = this._parseTags();
+  function GetThumbInfo(id, scraped) {
+    this.id = id;
+    this.scraped = scraped != null ? scraped : false;
   }
 
-  GetThumbInfo.prototype._parseTags = function() {
-    var xml, xmlJp, xmlTw;
-    xml = $(this.xml);
-    xmlJp = xml.find('tags[domain=jp]');
-    xmlTw = xml.find('tags[domain=tw]');
-    return {
-      'jp': this._objectize(xmlJp),
-      'tw': this._objectize(xmlTw)
-    };
+  GetThumbInfo.prototype.body = function() {
+    if (this._body != null) {
+      return this._body;
+    } else {
+      this.scraped = true;
+      return this._body = NicoScraper.Connection("http://ext.nicovideo.jp/api/getthumbinfo/" + this.id);
+    }
   };
 
-  GetThumbInfo.prototype._objectize = function(xml) {
+  GetThumbInfo.prototype.title = function() {
+    var _ref;
+    return (_ref = this._title) != null ? _ref : this._title = this.body().find('title').text();
+  };
+
+  GetThumbInfo.prototype.description = function() {
+    var _ref;
+    return (_ref = this._description) != null ? _ref : this._description = this.body().find('description').text();
+  };
+
+  GetThumbInfo.prototype.thumbnailUrl = function() {
+    var _ref;
+    return (_ref = this._thumbnailUrl) != null ? _ref : this._thumbnailUrl = this.body().find('thumbnail_url').text();
+  };
+
+  GetThumbInfo.prototype.firstRetrieve = function() {
+    var _ref;
+    return (_ref = this._firstRetrieve) != null ? _ref : this._firstRetrieve = this.body().find('first_retrieve').text();
+  };
+
+  GetThumbInfo.prototype.length = function() {
+    var _ref;
+    return (_ref = this._length) != null ? _ref : this._length = this._convertToSec(this.body().find('length').text());
+  };
+
+  GetThumbInfo.prototype.movieType = function() {
+    var _ref;
+    return (_ref = this._movieType) != null ? _ref : this._movieType = this.body().find('movie_type').text();
+  };
+
+  GetThumbInfo.prototype.sizeHigh = function() {
+    var _ref;
+    return (_ref = this._sizeHigh) != null ? _ref : this._sizeHigh = Number(this.body().find('size_high').text());
+  };
+
+  GetThumbInfo.prototype.sizeLow = function() {
+    var _ref;
+    return (_ref = this._sizeLow) != null ? _ref : this._sizeLow = Number(this.body().find('size_low').text());
+  };
+
+  GetThumbInfo.prototype.viewCounter = function() {
+    var _ref;
+    return (_ref = this._viewCounter) != null ? _ref : this._viewCounter = Number(this.body().find('view_counter').text());
+  };
+
+  GetThumbInfo.prototype.commentNum = function() {
+    var _ref;
+    return (_ref = this._commentNum) != null ? _ref : this._commentNum = Number(this.body().find('comment_num').text());
+  };
+
+  GetThumbInfo.prototype.Counter = function() {
+    var _ref;
+    return (_ref = this._mylistCounter) != null ? _ref : this._mylistCounter = Number(this.body().find('mylist_counter').text());
+  };
+
+  GetThumbInfo.prototype.lastResBody = function() {
+    var _ref;
+    return (_ref = this._lastResBody) != null ? _ref : this._lastResBody = this.body().find('last_res_body').text();
+  };
+
+  GetThumbInfo.prototype.watchUrl = function() {
+    var _ref;
+    return (_ref = this._watchUrl) != null ? _ref : this._watchUrl = this.body().find('watch_url').text();
+  };
+
+  GetThumbInfo.prototype.thumbType = function() {
+    var _ref;
+    return (_ref = this._thumbType) != null ? _ref : this._thumbType = this.body().find('thumb_type').eq(0).text();
+  };
+
+  GetThumbInfo.prototype.embeddable = function() {
+    var _ref;
+    return (_ref = this._embeddable) != null ? _ref : this._embeddable = Number(this.body().find('embeddable').text());
+  };
+
+  GetThumbInfo.prototype.noLivePlay = function() {
+    var _ref;
+    return (_ref = this._noLivePlay) != null ? _ref : this._noLivePlay = Number(this.body().find('no_live_play').text());
+  };
+
+  GetThumbInfo.prototype.tags = function() {
+    var _ref;
+    return (_ref = this._tags) != null ? _ref : this._tags = this._parseTags();
+  };
+
+  GetThumbInfo.prototype._parseTags = function() {
     var array;
     array = [];
-    xml.find('tag').each(function(i, e) {
+    this.body().find('tag').each(function(i, e) {
       var category, lock, obj;
       e = $(e);
       obj = {
@@ -192,268 +292,492 @@ NicoScraper.Source.GetThumbInfo = (function(_super) {
 
 })(Module);
 
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
 NicoScraper.Movie = (function() {
 
-  function Movie(provisional_id) {
-    this.provisional_id = provisional_id;
-    this.source = {
-      getThumbInfo: {},
-      mylistAtom: {},
-      mylistHtml: {},
-      html: {}
-    };
+  function Movie(id, source) {
+    this.id = id;
+    this.source = source;
+    this._mylistAtom = __bind(this._mylistAtom, this);
+
+    this._getThumbInfo = __bind(this._getThumbInfo, this);
+
   }
 
-  Movie.prototype.getAtom = function(callback) {
-    var connection,
-      _this = this;
-    return connection = new NicoScraper.Connection(this.uri + "?rss=atom", {
-      success: function(browser) {
-        _this.source.getThumbInfo = new NicoScraper.Source.GetThumbInfo(browser.window.document.innerHTML);
-        return callback(_this);
-      }
-    });
-  };
-
-  Movie.prototype.getType = function() {
-    switch (_.startsWith(this.provisional_id)) {
-      case 'nm':
-        return 'Niconico Movie Maker';
-      case 'sm':
-        return 'Smile Video';
-      default:
-        return 'unknown';
+  Movie.prototype.type = function() {
+    if (_(this.id).startsWith('nm')) {
+      return 'Niconico Movie Maker';
+    } else if (_(this.id).startsWith('sm')) {
+      return 'Smile Video';
+    } else {
+      return 'unknown';
     }
   };
 
   Movie.prototype.videoId = function() {
-    return this.provisional_id || this.source.mylistAtom.videoId;
+    if (this.type() !== 'unknown') {
+      return this.id;
+    }
   };
 
   Movie.prototype.threadId = function() {
-    return this.source.mylistAtom.threadId;
+    return this._source("threadId");
   };
 
   Movie.prototype.title = function() {
-    return this.source.getThumbInfo.title || this.source.mylistAtom.title;
+    return this._source("title");
   };
 
   Movie.prototype.description = function() {
-    return this.source.getThumbInfo.description || this.source.mylistAtom.description;
+    return this._source("description");
   };
 
   Movie.prototype.thumbnailUrl = function() {
-    return this.source.getThumbInfo.thumbnailUrl || this.source.mylistAtom.thumbnailUrl;
+    return this._source("thumbnailUrl");
   };
 
   Movie.prototype.firstRetrieve = function() {
-    return this.source.getThumbInfo.firstRetrieve;
+    return this._source("firstRetrieve");
   };
 
   Movie.prototype.published = function() {
-    return this.source.getThumbInfo.published;
+    return this._source("published");
   };
 
   Movie.prototype.updated = function() {
-    return this.source.getThumbInfo.updated;
+    return this._source("updated");
   };
 
   Movie.prototype.infoDate = function() {
-    return this.source.getThumbInfo.infoDate;
+    return this._source("infoDate");
   };
 
   Movie.prototype.length = function() {
-    return this.source.getThumbInfo.length || this.source.mylistAtom.length;
+    return this._source("length");
   };
 
   Movie.prototype.movieType = function() {
-    return this.source.getThumbInfo.movieType;
+    return this._source("movieType");
   };
 
   Movie.prototype.sizeHigh = function() {
-    return this.source.getThumbInfo.sizeHigh;
+    return this._source("sizeHigh");
   };
 
   Movie.prototype.sizeLow = function() {
-    return this.source.getThumbInfo.sizeLow;
+    return this._source("sizeLow");
   };
 
   Movie.prototype.viewCounter = function() {
-    return this.source.getThumbInfo.viewCounter;
+    return this._source("viewCounter");
   };
 
   Movie.prototype.commentNum = function() {
-    return this.source.getThumbInfo.commentNum;
+    return this._source("commentNum");
   };
 
   Movie.prototype.mylistCounter = function() {
-    return this.source.getThumbInfo.mylistCounter;
+    return this._source("mylistCounter");
   };
 
   Movie.prototype.lastResBody = function() {
-    return this.source.getThumbInfo.lastResBody;
+    return this._source("lastResBody");
   };
 
   Movie.prototype.watchUrl = function() {
-    return this.source.getThumbInfo.watchUrl;
+    return this._source("watchUrl");
   };
 
   Movie.prototype.thumbType = function() {
-    return this.source.getThumbInfo.thumbType;
+    return this._source("thumbType");
   };
 
   Movie.prototype.embeddable = function() {
-    return this.source.getThumbInfo.embeddable;
+    return this._source("embeddable");
   };
 
   Movie.prototype.noLivePlay = function() {
-    return this.source.getThumbInfo.noLivePlay;
+    return this._source("noLivePlay");
+  };
+
+  Movie.prototype.tags = function() {
+    return this._source("tags");
+  };
+
+  Movie.prototype._source = function(attr) {
+    if ((this.source != null) && (this.source[attr] != null)) {
+      return this.source[attr]();
+    }
+    if (this._getThumbInfo().scraped && (this._getThumbInfo()[attr] != null)) {
+      this._getThumbInfo()[attr]();
+    }
+    if (this._getThumbInfo().scraped && (this._getThumbInfo()[attr] != null)) {
+      this._mylistAtom()[attr]();
+    }
+    if (this._getThumbInfo()[attr] != null) {
+      this._getThumbInfo()[attr]();
+    }
+    if (this._mylistAtom()[attr] != null) {
+      return this._mylistAtom()[attr]();
+    }
+  };
+
+  Movie.prototype._getThumbInfo = function() {
+    var _ref;
+    return (_ref = this.__getThumbInfo) != null ? _ref : this.__getThumbInfo = new NicoScraper.GetThumbInfo(this.id);
+  };
+
+  Movie.prototype._mylistAtom = function() {
+    var _ref;
+    return (_ref = this.__mylistAtom) != null ? _ref : this.__mylistAtom = new NicoScraper.mylistAtom(this.id);
   };
 
   return Movie;
 
 })();
 
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
 NicoScraper.Mylist = (function() {
 
-  function Mylist(mylist_id) {
-    this.mylist_id = mylist_id;
-    this.uri = "http://www.nicovideo.jp/mylist/" + this.mylist_id;
-    this.source = {
-      atom: {},
-      html: {}
-    };
+  function Mylist(id) {
+    this.id = id;
+    this._mylist = __bind(this._mylist, this);
+
+    this._mylistAtom = __bind(this._mylistAtom, this);
+
   }
 
-  Mylist.prototype.getAtom = function(callback) {
-    var connection,
-      _this = this;
-    return connection = new NicoScraper.Connection(this.uri + "?rss=atom", {
-      success: function(browser) {
-        _this.source.atom = new NicoScraper.Source.MylistAtom(browser.window.document.innerHTML);
-        console.log("callback");
-        return callback(_this);
-      }
-    });
+  Mylist.prototype.type = function() {
+    if (_(this.id).startsWith('nm')) {
+      return 'Niconico Movie Maker';
+    } else if (_(this.id).startsWith('sm')) {
+      return 'Smile Video';
+    } else {
+      return 'unknown';
+    }
   };
-
-  Mylist.prototype.getHtml = function() {};
 
   Mylist.prototype.title = function() {
-    return this.source.atom.title;
+    return this._source("title");
   };
 
-  Mylist.prototype.subtitle = function() {
-    return this.source.atom.subtitle;
+  Mylist.prototype.subTitle = function() {
+    return this._source("subtitle");
   };
 
   Mylist.prototype.author = function() {
-    return this.source.atom.author;
+    return this._source("author");
   };
 
   Mylist.prototype.mylistId = function() {
-    return this.source.atom.mylistId;
+    return this._source("mylistId");
   };
 
   Mylist.prototype.updatedTime = function() {
-    return this.source.atom.updated;
+    return this._source("updated");
   };
 
-  Mylist.prototype.movies = function() {};
+  Mylist.prototype.movies = function() {
+    var movie, movies, videoId, _ref;
+    movies = {};
+    _ref = this._source("movies");
+    for (videoId in _ref) {
+      movie = _ref[videoId];
+      movies[videoId] = new NicoScraper.Movie(videoId, movie);
+    }
+    return movies;
+  };
+
+  Mylist.prototype.movie = function(id) {
+    return this.movies()[id];
+  };
+
+  Mylist.prototype._source = function(attr) {
+    if (this._mylistAtom().scraped && (this._mylistAtom()[attr] != null)) {
+      this._mylistAtom()[attr]();
+    }
+    if (this._mylist().scraped && (this._mylist()[attr] != null)) {
+      this._mylist()[attr]();
+    }
+    if (this._mylistAtom()[attr] != null) {
+      this._mylistAtom()[attr]();
+    }
+    if (this._mylist()[attr] != null) {
+      return this._mylist()[attr]();
+    }
+  };
+
+  Mylist.prototype._mylistAtom = function() {
+    var _ref;
+    return (_ref = this.__mylistAtom) != null ? _ref : this.__mylistAtom = new NicoScraper.MylistAtom(this.id);
+  };
+
+  Mylist.prototype._mylist = function() {
+    var _ref;
+    return (_ref = this.__mylistAtom) != null ? _ref : this.__mylistAtom = new NicoScraper.MylistAtom(this.id);
+  };
 
   return Mylist;
 
 })();
 
+var __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-NicoScraper.Source.MylistAtom = (function() {
+NicoScraper.MylistAtom = (function(_super) {
 
-  function MylistAtom(xml) {
-    var e, entry, _i, _len, _ref;
-    this.xml = xml;
-    this.entry = {};
-    _ref = $(this.xml).find('entry');
+  __extends(MylistAtom, _super);
+
+  MylistAtom.extend(NicoScraper.Utility);
+
+  function MylistAtom(id, scraped) {
+    this.id = id;
+    this.scraped = scraped != null ? scraped : false;
+  }
+
+  MylistAtom.prototype.body = function() {
+    if (this._body != null) {
+      return this._body;
+    } else {
+      this.scraped = true;
+      return this._body = $(NicoScraper.Connection("http://www.nicovideo.jp/mylist/" + this.id + "?rss=atom"));
+    }
+  };
+
+  MylistAtom.prototype.title = function() {
+    var _ref;
+    return (_ref = this._title) != null ? _ref : this._title = this.body().find('title').eq(0).text().substring("マイリスト　".length).slice(0, -"‐ニコニコ動画".length);
+  };
+
+  MylistAtom.prototype.subtitle = function() {
+    var _ref;
+    return (_ref = this._subtitle) != null ? _ref : this._subtitle = this.body().find('subtitle').text();
+  };
+
+  MylistAtom.prototype.mylistId = function() {
+    var _ref;
+    return (_ref = this._mylistId) != null ? _ref : this._mylistId = Number(this.body().find('link').eq(0).attr('href').split('/')[4]);
+  };
+
+  MylistAtom.prototype.updated = function() {
+    var _ref;
+    return (_ref = this._updated) != null ? _ref : this._updated = this.body().find('updated').eq(0).text();
+  };
+
+  MylistAtom.prototype.author = function() {
+    var _ref;
+    return (_ref = this._author) != null ? _ref : this._author = this.body().find('author name').text();
+  };
+
+  MylistAtom.prototype.movies = function() {
+    var _ref;
+    return (_ref = this._movies) != null ? _ref : this._movies = this._entries();
+  };
+
+  MylistAtom.prototype._entries = function() {
+    var entries, entry, _entry, _i, _len, _ref;
+    entries = {};
+    _ref = this.body().find('entry');
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       entry = _ref[_i];
-      e = new NicoScraper.Source.EntryAtom(entry);
-      this.entry[e.videoId] = e;
+      _entry = new NicoScraper.MylistAtom.Entry($(entry));
+      entries[_entry.videoId()] = _entry;
     }
-    this.b = $(this.xml);
-    this.title = this.b.find('title').eq(0).text().substring("マイリスト　".length).slice(0, -"‐ニコニコ動画".length);
-    this.subtitle = this.b.find('subtitle').text();
-    this.mylistId = Number(this.b.find('link').eq(0).attr('href').split('/')[4]);
-    this.updated = this.b.find('updated').eq(0).text();
-    this.author = this.b.find('author name').text();
-    delete this.b;
-  }
+    return entries;
+  };
 
   return MylistAtom;
 
-})();
+})(Module);
 
+NicoScraper.MylistAtom.Entry = (function(_super) {
+
+  __extends(Entry, _super);
+
+  Entry.extend(NicoScraper.Utility);
+
+  function Entry(body) {
+    this.body = body;
+  }
+
+  Entry.prototype.content = function() {
+    var _ref;
+    return (_ref = this._content) != null ? _ref : this._content = this.body.find('content');
+  };
+
+  Entry.prototype.title = function() {
+    var _ref;
+    return (_ref = this._title) != null ? _ref : this._title = this.body.find('title').text();
+  };
+
+  Entry.prototype.videoId = function() {
+    var _ref;
+    return (_ref = this._videoId) != null ? _ref : this._videoId = this.body.find('link').attr('href').split('/')[4];
+  };
+
+  Entry.prototype.timelikeId = function() {
+    var _ref;
+    return (_ref = this._timelikeId) != null ? _ref : this._timelikeId = Number(this.body.find('id').text().split(',')[1].split(':')[1].split('/')[2]);
+  };
+
+  Entry.prototype.published = function() {
+    var _ref;
+    return (_ref = this._published) != null ? _ref : this._published = this.body.find('published').text();
+  };
+
+  Entry.prototype.updated = function() {
+    var _ref;
+    return (_ref = this._updated) != null ? _ref : this._updated = this.body.find('updated').text();
+  };
+
+  Entry.prototype.thumbnailUrl = function() {
+    var _ref;
+    return (_ref = this._thumbnailUrl) != null ? _ref : this._thumbnailUrl = this.content().find('img').attr('src');
+  };
+
+  Entry.prototype.description = function() {
+    var _ref;
+    return (_ref = this._description) != null ? _ref : this._description = this.content().find('.nico-description').text();
+  };
+
+  Entry.prototype.length = function() {
+    var _ref;
+    return (_ref = this._length) != null ? _ref : this._length = this._convertToSec(this.content().find('.nico-info-length').text());
+  };
+
+  Entry.prototype.infoDate = function() {
+    var _ref;
+    return (_ref = this._infoDate) != null ? _ref : this._infoDate = this._convertToUnixTime(this.content().find('.nico-info-date').text());
+  };
+
+  return Entry;
+
+})(Module);
+
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
 NicoScraper.TagSearch = (function() {
 
-  function TagSearch(params, callback) {
-    var connection,
-      _this = this;
-    this.params = params != null ? params : {};
-    this.callback = callback;
-    this.page = this.params.page || 1;
-    this.searchString = this.params.searchString || '';
-    this.params.sortMethod = 'newness_of_comment';
-    this.params.orderParam = 'desc';
-    connection = new NicoScraper.Connection(this.uri(), {
-      success: function(browser) {
-        var info;
-        info = new TagSearchAtom(browser.window.document.innerHTML);
-        return _this.callback(info);
-      }
-    });
+  function TagSearch(keyword) {
+    this.keyword = keyword;
+    this._tagSearch = __bind(this._tagSearch, this);
+
+    this._tagSearchAtom = __bind(this._tagSearchAtom, this);
+
   }
 
-  TagSearch.prototype.uri = function() {
-    return this.host() + this.path() + '?' + this.queryParam();
+  TagSearch.prototype.movies = function() {
+    var movie, movies, videoId, _ref;
+    movies = {};
+    console.log(this._source("movies"));
+    _ref = this._source("movies");
+    for (videoId in _ref) {
+      movie = _ref[videoId];
+      movies[videoId] = new NicoScraper.Movie(videoId, movie);
+    }
+    return movies;
   };
 
-  TagSearch.prototype.host = function() {
-    return 'http://www.nicovideo.jp/';
+  TagSearch.prototype.movie = function(id) {
+    return this.movies()[id];
   };
 
-  TagSearch.prototype.path = function() {
-    return "tag/" + this.searchString;
+  TagSearch.prototype._source = function(attr) {
+    if (this._tagSearchAtom().scraped && (this._tagSearchAtom()[attr] != null)) {
+      this._tagSearchAtom()[attr]();
+    }
+    if (this._tagSearch().scraped && (this._tagSearch()[attr] != null)) {
+      this._tagSearch()[attr]();
+    }
+    if (this._tagSearchAtom()[attr] != null) {
+      this._tagSearchAtom()[attr]();
+    }
+    if (this._tagSearch()[attr] != null) {
+      return this._tagSearch()[attr]();
+    }
   };
 
-  TagSearch.prototype.queryParam = function() {
+  TagSearch.prototype._tagSearchAtom = function() {
+    var _ref;
+    return (_ref = this.__tagSearchAtom) != null ? _ref : this.__tagSearchAtom = new NicoScraper.TagSearchAtom(this.keyword);
+  };
+
+  TagSearch.prototype._tagSearch = function() {
+    var _ref;
+    return (_ref = this.__tagSearchAtom) != null ? _ref : this.__tagSearchAtom = new NicoScraper.TagSearchAtom(this.keyword);
+  };
+
+  return TagSearch;
+
+})();
+
+var __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+NicoScraper.TagSearchAtom = (function(_super) {
+
+  __extends(TagSearchAtom, _super);
+
+  TagSearchAtom.extend(NicoScraper.Utility);
+
+  function TagSearchAtom(keyword, options) {
+    this.keyword = keyword;
+    this.options = options != null ? options : {
+      page: 1,
+      sort: 'newness_of_comment',
+      order: 'desc'
+    };
+    this.page = this.options.page;
+  }
+
+  TagSearchAtom.prototype.next = function() {
+    return this.page += 1;
+  };
+
+  TagSearchAtom.prototype.prev = function() {
+    return this.page -= 1;
+  };
+
+  TagSearchAtom.prototype.uri = function() {
+    return ("http://www.nicovideo.jp/tag/" + this.keyword + "?") + this._queryParam();
+  };
+
+  TagSearchAtom.prototype.body = function() {
+    if (this._body != null) {
+      return this._body;
+    } else {
+      this.scraped = true;
+      return this._body = $(NicoScraper.Connection(this.uri()));
+    }
+  };
+
+  TagSearchAtom.prototype.movies = function() {
+    var _ref;
+    return (_ref = this._movies) != null ? _ref : this._movies = this._entries();
+  };
+
+  TagSearchAtom.prototype._queryParam = function() {
     var param;
     param = [];
-    param.push(pageParam());
-    if (sortParam() != null) {
-      param.push(sortParam());
+    param.push(this._pageParam());
+    if (this._sortParam() != null) {
+      param.push(this._sortParam());
     }
-    if (orderParam() != null) {
-      param.push(orderParam());
+    if (this._orderParam() != null) {
+      param.push(this._orderParam());
     }
     param.push('rss=atom');
     return param.join('&');
   };
 
-  TagSearch.prototype.next = function() {
-    return this.page += 1;
-  };
-
-  TagSearch.prototype.prev = function() {
-    return this.page -= 1;
-  };
-
-  TagSearch.prototype.pageParam = function() {
+  TagSearchAtom.prototype._pageParam = function() {
     return "page=" + this.page;
   };
 
-  TagSearch.prototype.sortParam = function() {
-    switch (this.params.sortMethod) {
+  TagSearchAtom.prototype._sortParam = function() {
+    switch (this.options.sort) {
       case 'newness_of_comment':
         return null;
       case 'view_num':
@@ -469,8 +793,8 @@ NicoScraper.TagSearch = (function() {
     }
   };
 
-  TagSearch.prototype.orderParam = function() {
-    switch (this.params.orderParam) {
+  TagSearchAtom.prototype._orderParam = function() {
+    switch (this.options.order) {
       case 'asc':
         return 'order=a';
       case 'desc':
@@ -478,34 +802,85 @@ NicoScraper.TagSearch = (function() {
     }
   };
 
-  return TagSearch;
-
-})();
-
-
-NicoScraper.Source.TagSearchAtom = (function() {
-
-  function TagSearchAtom(xml) {
-    var e, entry, _i, _len, _ref;
-    this.xml = xml;
-    this.entry = {};
-    _ref = $(this.xml).find('entry');
+  TagSearchAtom.prototype._entries = function() {
+    var entries, entry, _entry, _i, _len, _ref;
+    entries = {};
+    _ref = this.body().find('entry');
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       entry = _ref[_i];
-      e = new NicoScraper.Source.EntryAtom(entry);
-      this.entry[e.videoId] = e;
+      _entry = new NicoScraper.MylistAtom.Entry($(entry));
+      entries[_entry.videoId()] = _entry;
     }
-    this.b = $(this.xml);
-    this.title = this.b.find('title').eq(0).text().substring("マイリスト　".length).slice(0, -"‐ニコニコ動画".length);
-    this.subtitle = this.b.find('subtitle').text();
-    this.updated = this.b.find('updated').eq(0).text();
-    this.tags = this.b.find('title').eq(0).text().substring("タグ ".length).slice(0, -"‐ニコニコ動画".length).split(" ");
-    delete this.b;
-  }
+    return entries;
+  };
 
   return TagSearchAtom;
 
-})();
+})(Module);
+
+NicoScraper.TagSearchAtom.Entry = (function(_super) {
+
+  __extends(Entry, _super);
+
+  Entry.extend(NicoScraper.Utility);
+
+  function Entry(body) {
+    this.body = body;
+  }
+
+  Entry.prototype.content = function() {
+    var _ref;
+    return (_ref = this._content) != null ? _ref : this._content = this.body.find('content');
+  };
+
+  Entry.prototype.title = function() {
+    var _ref;
+    return (_ref = this._title) != null ? _ref : this._title = this.body.find('title').text();
+  };
+
+  Entry.prototype.videoId = function() {
+    var _ref;
+    return (_ref = this._videoId) != null ? _ref : this._videoId = this.body.find('link').attr('href').split('/')[4];
+  };
+
+  Entry.prototype.timelikeId = function() {
+    var _ref;
+    return (_ref = this._timelikeId) != null ? _ref : this._timelikeId = Number(this.body.find('id').text().split(',')[1].split(':')[1].split('/')[2]);
+  };
+
+  Entry.prototype.published = function() {
+    var _ref;
+    return (_ref = this._published) != null ? _ref : this._published = this.body.find('published').text();
+  };
+
+  Entry.prototype.updated = function() {
+    var _ref;
+    return (_ref = this._updated) != null ? _ref : this._updated = this.body.find('updated').text();
+  };
+
+  Entry.prototype.thumbnailUrl = function() {
+    var _ref;
+    return (_ref = this._thumbnailUrl) != null ? _ref : this._thumbnailUrl = this.content().find('img').attr('src');
+  };
+
+  Entry.prototype.description = function() {
+    var _ref;
+    return (_ref = this._description) != null ? _ref : this._description = this.content().find('.nico-description').text();
+  };
+
+  Entry.prototype.length = function() {
+    var _ref;
+    return (_ref = this._length) != null ? _ref : this._length = this._convertToSec(this.content().find('.nico-info-length').text());
+  };
+
+  Entry.prototype.infoDate = function() {
+    var _ref;
+    return (_ref = this._infoDate) != null ? _ref : this._infoDate = this._convertToUnixTime(this.content().find('.nico-info-date').text());
+  };
+
+  return Entry;
+
+})(Module);
 
 
 NicoScraper.Utility = (function() {

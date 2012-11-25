@@ -1,48 +1,31 @@
 class NicoScraper.TagSearch
-  constructor : (@params={}, @callback) ->
-    @page = @params.page || 1
-    @searchString = @params.searchString || ''
-    @params.sortMethod = 'newness_of_comment'
-    @params.orderParam = 'desc'
+  constructor: (@keyword) ->
 
-    connection = new NicoScraper.Connection @uri(),
-      success : (browser) =>
-        info = new TagSearchAtom browser.window.document.innerHTML
-        @callback info
+  # keyword: -> @_source "keyword"
 
-  uri : -> @host() + @path() + '?' + @queryParam()
+  movies: ->
+    movies = {}
 
-  host : -> 'http://www.nicovideo.jp/'
+    console.log @_source("movies")
+    for videoId, movie of @_source("movies")
+      movies[videoId] = new NicoScraper.Movie videoId, movie
 
-  path : -> "tag/#{@searchString}"
+    movies
 
-  queryParam : ->
-    param = []
-    param.push pageParam()
-    param.push sortParam() if sortParam()?
-    param.push orderParam() if orderParam()?
-    param.push 'rss=atom'
+  movie: (id) ->
+    @movies()[id]
 
-    param.join '&'
 
-  next : ->
-    @page += 1
+  _source: (attr) ->
+    @_tagSearchAtom()[attr]() if @_tagSearchAtom().scraped and @_tagSearchAtom()[attr]?
+    @_tagSearch()[attr]() if @_tagSearch().scraped and @_tagSearch()[attr]?
 
-  prev : ->
-    @page -= 1
+    @_tagSearchAtom()[attr]() if @_tagSearchAtom()[attr]?
+    @_tagSearch()[attr]() if @_tagSearch()[attr]?
 
-  pageParam : -> "page=#{@page}"
 
-  sortParam : ->
-    switch @params.sortMethod
-      when 'newness_of_comment' then null
-      when 'view_num' then 'sort=v'
-      when 'comment_num' then 'sort=r'
-      when 'mylist_num' then 'sort=m'
-      when 'published_date' then 'sort=f'
-      when 'length' then 'sort=l'
+  _tagSearchAtom: =>
+    @__tagSearchAtom ?= new NicoScraper.TagSearchAtom @keyword
 
-  orderParam : ->
-    switch @params.orderParam
-      when 'asc' then 'order=a'
-      when 'desc' then null
+  _tagSearch: =>
+    @__tagSearchAtom ?= new NicoScraper.TagSearchAtom @keyword
