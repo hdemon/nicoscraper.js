@@ -3,4 +3,4 @@ _.str = require 'underscore.string'
 _.mixin _.str.exports()
 _.str.include 'Underscore.string', 'string'
 $ = require 'cheerio'
-request = require 'request'
+httpsync = require 'httpsync'

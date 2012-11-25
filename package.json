@@ -39,8 +39,8 @@
     "nock":           ">= 0.0.1",
     "should":         ">= 0.0.1",
 
+    "httpsync":       "latest",
     "cheerio":        "latest",
-    "request":        "latest",
     "underscore":     ">= 0.0.1",
     "underscore.string": ">= 0.0.1"
   },

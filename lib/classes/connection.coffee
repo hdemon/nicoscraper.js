@@ -1,21 +1,15 @@
 class NicoScraper.Connection
-  constructor : (@uri, @callback) ->
-    @callback.success ?= ->
-    @callback.failed ?= ->
+  constructor: (@uri) ->
+    response = httpsync.get(@uri).end()
 
-    request = new request
+    switch response.statusCode
+      when 200
+        resource = $(response.data.toString())
+      when 404
+        ""
+      when 500
+        ""
+      when 503
+        ""
 
-    request @uri, (error, response, body) =>
-
-      switch response.statusCode
-        when 200
-          @callback.success body
-        when 404
-          @callback.failed
-          @callback._404
-        when 500
-          @callback.failed
-          @callback._500
-        when 503
-          @callback.failed
-          @callback._503
+    return resource

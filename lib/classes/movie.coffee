@@ -1,91 +1,47 @@
 class NicoScraper.Movie
-  constructor : (@provisional_id) ->
-    @source =
-      getThumbInfo: {}
-      mylistAtom: {}
-      mylistHtml: {}
-      html: {}
+  constructor: (@id) ->
 
-  getAtom : (callback) ->
-    connection = new NicoScraper.Connection @uri + "?rss=atom",
-      success : (browser) =>
-        @source.getThumbInfo = new NicoScraper.Source.GetThumbInfo browser.window.document.innerHTML
-        callback @
+  type: ->
+    if _(@id).startsWith 'nm'
+      'Niconico Movie Maker'
+    else if _(@id).startsWith 'sm'
+      'Smile Video'
+    else
+      'unknown'
 
-  getType : ->
-    switch _.startsWith @provisional_id
-      when 'nm'
-        'Niconico Movie Maker'
-      when 'sm'
-        'Smile Video'
-      else
-        'unknown'
+  videoId: -> @id if @type() isnt 'unknown'
+  threadId: -> @_source "threadId"
+  title: -> @_source "title"
+  description: -> @_source "description"
+  thumbnailUrl: -> @_source "thumbnailUrl"
+  firstRetrieve: -> @_source "firstRetrieve"
+  published: -> @_source "published"
+  updated: -> @_source "updated"
+  infoDate: -> @_source "infoDate"
+  length: -> @_source "length"
+  movieType: -> @_source "movieType"
+  sizeHigh: -> @_source "sizeHigh"
+  sizeLow: -> @_source "sizeLow"
+  viewCounter: -> @_source "viewCounter"
+  commentNum: -> @_source "commentNum"
+  mylistCounter: -> @_source "mylistCounter"
+  lastResBody: -> @_source "lastResBody"
+  watchUrl: -> @_source "watchUrl"
+  thumbType: -> @_source "thumbType"
+  embeddable: -> @_source "embeddable"
+  noLivePlay: -> @_source "noLivePlay"
+  tags: -> @_source "tags"
 
-  videoId : ->
-    @provisional_id or
-    @source.mylistAtom.videoId
 
-  threadId : ->
-    @source.mylistAtom.threadId
+  _source: (attr) ->
+    @_getThumbInfo()[attr]() if @_getThumbInfo().scraped and @_getThumbInfo()[attr]?
+    @_mylistAtom()[attr]() if @_getThumbInfo().scraped and @_getThumbInfo()[attr]?
 
-  title : ->
-    @source.getThumbInfo.title or
-    @source.mylistAtom.title
+    @_getThumbInfo()[attr]() if @_getThumbInfo()[attr]?
+    @_mylistAtom()[attr]() if @_mylistAtom()[attr]?
 
-  description : ->
-    @source.getThumbInfo.description or
-    @source.mylistAtom.description
+  _getThumbInfo: =>
+    @__getThumbInfo ?= new NicoScraper.GetThumbInfo @id
 
-  thumbnailUrl : ->
-    @source.getThumbInfo.thumbnailUrl or
-    @source.mylistAtom.thumbnailUrl
-
-  firstRetrieve : ->
-    @source.getThumbInfo.firstRetrieve
-
-  published : ->
-    @source.getThumbInfo.published
-
-  updated : ->
-    @source.getThumbInfo.updated
-
-  infoDate : ->
-    @source.getThumbInfo.infoDate
-
-  length : ->
-    @source.getThumbInfo.length or
-    @source.mylistAtom.length
-
-  movieType : ->
-    @source.getThumbInfo.movieType
-
-  sizeHigh : ->
-    @source.getThumbInfo.sizeHigh
-
-  sizeLow : ->
-    @source.getThumbInfo.sizeLow
-
-  viewCounter : ->
-    @source.getThumbInfo.viewCounter
-
-  commentNum : ->
-    @source.getThumbInfo.commentNum
-
-  mylistCounter : ->
-    @source.getThumbInfo.mylistCounter
-
-  lastResBody : ->
-    @source.getThumbInfo.lastResBody
-
-  watchUrl : ->
-    @source.getThumbInfo.watchUrl
-
-  thumbType : ->
-    @source.getThumbInfo.thumbType
-
-  embeddable : ->
-    @source.getThumbInfo.embeddable
-
-  noLivePlay : ->
-    @source.getThumbInfo.noLivePlay
-
+  _mylistAtom: =>
+    @__mylistAtom ?= new NicoScraper.GetThumbInfo @id
