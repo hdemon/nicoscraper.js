@@ -1,24 +1,40 @@
-class NicoScraper.Source.MylistAtom
-  constructor : (@xml) ->
-    @entry = {}
-    for entry in $(@xml).find 'entry'
-      e = new NicoScraper.Source.EntryAtom entry
-      @entry[e.videoId] = e
+  # constructor : (@xml) ->
+  #   @entry = {}
+  #   for entry in $(@xml).find 'entry'
+  #     e = new NicoScraper.Source.EntryAtom entry
+  #     @entry[e.videoId] = e
 
-    @b = $(@xml)
+class NicoScraper.mylistAtom extends Module
+  @extend NicoScraper.Utility
 
-    @title    = @b.find('title').eq(0)
-                  .text()
-                  .substring("マイリスト　".length)
-                  .slice(0, -("‐ニコニコ動画".length))
+  constructor: (@id, @scraped=false) ->
 
-    @subtitle = @b.find('subtitle').text()
+  body: ->
+    if @_body?
+      @_body
+    else
+      @scraped = true
+      @_body = NicoScraper.Connection "http://www.nicovideo.jp/mylist/#{@id}?rss=atom"
 
-    @mylistId = Number @b
-                  .find('link').eq(0)
-                  .attr('href').split('/')[4]
+  title: ->
+    @_title ?=
+      @body().find('title').eq(0)
+        .text()
+        .substring("マイリスト　".length)
+        .slice(0, -("‐ニコニコ動画".length))
 
-    @updated  = @b.find('updated').eq(0).text()
-    @author   = @b.find('author name').text()
+  subtitle: ->
+    @_subtitle ?=
+      @body().find('subtitle').text()
 
-    delete @b
+  mylistId: ->
+    @_mylistId ?=
+      Number @body()
+        .find('link').eq(0)
+        .attr('href').split('/')[4]
+
+  updated: ->
+    @_updated ?= @body().find('updated').eq(0).text()
+
+  author: ->
+    @_author ?= @body().find('author name').text()

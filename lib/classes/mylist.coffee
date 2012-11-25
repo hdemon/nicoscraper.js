@@ -1,23 +1,31 @@
 class NicoScraper.Mylist
-  constructor : (@mylist_id) ->
-    @uri = "http://www.nicovideo.jp/mylist/#{@mylist_id}"
+  constructor: (@id) ->
 
-    @source =
-      atom : {}
-      html : {}
+  type: ->
+    if _(@id).startsWith 'nm'
+      'Niconico Movie Maker'
+    else if _(@id).startsWith 'sm'
+      'Smile Video'
+    else
+      'unknown'
 
-  getAtom : (callback) ->
-    connection = new NicoScraper.Connection @uri + "?rss=atom",
-      success : (browser) =>
-        @source.atom = new NicoScraper.Source.MylistAtom browser.window.document.innerHTML
-        console.log "callback"
-        callback @
+  title: -> @_source "title"
+  subTitle: -> @_source "subtitle"
+  author: -> @_source "author"
+  mylistId: -> @_source "mylistId"
+  updatedTime: -> @_source "updated"
+  movies: ->
 
-  getHtml : ->
+  _source: (attr) ->
+    @_mylistAtom()[attr]() if @_mylistAtom().scraped and @_mylistAtom()[attr]?
+    @_mylist()[attr]() if @_mylist().scraped and @_mylist()[attr]?
 
-  title : -> @source.atom.title
-  subtitle : -> @source.atom.subtitle
-  author : -> @source.atom.author
-  mylistId : -> @source.atom.mylistId
-  updatedTime : -> @source.atom.updated
-  movies : ->
+    @_mylistAtom()[attr]() if @_mylistAtom()[attr]?
+    @_mylist()[attr]() if @_mylist()[attr]?
+
+
+  _mylistAtom: =>
+    @__mylistAtom ?= new NicoScraper.mylistAtom @id
+
+  _mylist: =>
+    @__mylistAtom ?= new NicoScraper.mylistAtom @id
