@@ -406,20 +406,19 @@ NicoScraper.Movie = (function() {
   };
 
   Movie.prototype._source = function(attr) {
-    var gt, ma, _scraped;
+    var gt, ma;
     gt = this._getThumbInfo();
     ma = this._mylistAtom();
-    _scraped = function() {
-      if (gt.scraped != null) {
-        return gt[attr]();
-      } else {
-        return ma[attr]();
-      }
-    };
     if (this.source != null) {
       return this.source[attr]();
     } else if ((gt[attr] != null) && (ma[attr] != null)) {
-      return _scraped();
+      if (gt.scraped != null) {
+        return gt[attr]();
+      } else if (ma.scraped != null) {
+        return ma[attr]();
+      } else {
+        return gt[attr]();
+      }
     } else if (gt[attr] != null) {
       return gt[attr]();
     } else if (ma[attr] != null) {
@@ -447,7 +446,7 @@ NicoScraper.Mylist = (function() {
 
   function Mylist(id) {
     this.id = id;
-    this._mylist = __bind(this._mylist, this);
+    this._mylistHtml = __bind(this._mylistHtml, this);
 
     this._mylistAtom = __bind(this._mylistAtom, this);
 
@@ -499,17 +498,21 @@ NicoScraper.Mylist = (function() {
   };
 
   Mylist.prototype._source = function(attr) {
-    if (this._mylistAtom().scraped && (this._mylistAtom()[attr] != null)) {
-      this._mylistAtom()[attr]();
-    }
-    if (this._mylist().scraped && (this._mylist()[attr] != null)) {
-      this._mylist()[attr]();
-    }
-    if (this._mylistAtom()[attr] != null) {
-      this._mylistAtom()[attr]();
-    }
-    if (this._mylist()[attr] != null) {
-      return this._mylist()[attr]();
+    var ma, mh;
+    ma = this._mylistAtom();
+    mh = this._mylistHtml();
+    if ((ma[attr] != null) && (mh[attr] != null)) {
+      if (ma.scraped != null) {
+        return ma[attr]();
+      } else if (mh.scraped != null) {
+        return mh[attr]();
+      } else {
+        return ma[attr]();
+      }
+    } else if (ma[attr] != null) {
+      return ma[attr]();
+    } else if (mh[attr] != null) {
+      return mh[attr]();
     }
   };
 
@@ -518,7 +521,7 @@ NicoScraper.Mylist = (function() {
     return (_ref = this.__mylistAtom) != null ? _ref : this.__mylistAtom = new NicoScraper.MylistAtom(this.id);
   };
 
-  Mylist.prototype._mylist = function() {
+  Mylist.prototype._mylistHtml = function() {
     var _ref;
     return (_ref = this.__mylistAtom) != null ? _ref : this.__mylistAtom = new NicoScraper.MylistAtom(this.id);
   };

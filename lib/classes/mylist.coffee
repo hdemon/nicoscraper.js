@@ -28,15 +28,23 @@ class NicoScraper.Mylist
 
 
   _source: (attr) ->
-    @_mylistAtom()[attr]() if @_mylistAtom().scraped and @_mylistAtom()[attr]?
-    @_mylist()[attr]() if @_mylist().scraped and @_mylist()[attr]?
+    ma = @_mylistAtom()
+    mh = @_mylistHtml()
 
-    @_mylistAtom()[attr]() if @_mylistAtom()[attr]?
-    @_mylist()[attr]() if @_mylist()[attr]?
-
+    if ma[attr]? and mh[attr]?
+      if ma.scraped?
+        ma[attr]()
+      else if mh.scraped?
+        mh[attr]()
+      else
+        ma[attr]()
+    else if ma[attr]?
+      ma[attr]()
+    else if mh[attr]?
+      mh[attr]()
 
   _mylistAtom: =>
     @__mylistAtom ?= new NicoScraper.MylistAtom @id
 
-  _mylist: =>
+  _mylistHtml: =>
     @__mylistAtom ?= new NicoScraper.MylistAtom @id

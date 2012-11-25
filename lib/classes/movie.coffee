@@ -37,21 +37,19 @@ class NicoScraper.Movie
     gt = @_getThumbInfo()
     ma = @_mylistAtom()
 
-    _scraped = ->
-      if gt.scraped?
-        gt[attr]()
-      else
-        ma[attr]()
-
     if @source?
       @source[attr]()
     else if gt[attr]? and ma[attr]?
-      _scraped()
+      if gt.scraped?
+        gt[attr]()
+      else if ma.scraped?
+        ma[attr]()
+      else
+        gt[attr]()
     else if gt[attr]?
       gt[attr]()
     else if ma[attr]?
       ma[attr]()
-
 
   _getThumbInfo: =>
     @__getThumbInfo ?= new NicoScraper.GetThumbInfo @id
