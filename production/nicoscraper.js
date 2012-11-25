@@ -684,6 +684,14 @@ NicoScraper.TagSearch = (function() {
     return this.movies()[id];
   };
 
+  TagSearch.prototype.next = function() {
+    return this.__tagSearchAtom.next();
+  };
+
+  TagSearch.prototype.prev = function() {
+    return this.__tagSearchAtom.prev();
+  };
+
   TagSearch.prototype._source = function(attr) {
     if (this._tagSearchAtom().scraped && (this._tagSearchAtom()[attr] != null)) {
       this._tagSearchAtom()[attr]();
@@ -701,12 +709,16 @@ NicoScraper.TagSearch = (function() {
 
   TagSearch.prototype._tagSearchAtom = function() {
     var _ref;
-    return (_ref = this.__tagSearchAtom) != null ? _ref : this.__tagSearchAtom = new NicoScraper.TagSearchAtom(this.keyword);
+    return (_ref = this.__tagSearchAtom) != null ? _ref : this.__tagSearchAtom = new NicoScraper.TagSearchAtom(this.keyword, {
+      page: this._page
+    });
   };
 
   TagSearch.prototype._tagSearch = function() {
     var _ref;
-    return (_ref = this.__tagSearchAtom) != null ? _ref : this.__tagSearchAtom = new NicoScraper.TagSearchAtom(this.keyword);
+    return (_ref = this.__tagSearchAtom) != null ? _ref : this.__tagSearchAtom = new NicoScraper.TagSearchAtom(this.keyword, {
+      page: this._page
+    });
   };
 
   return TagSearch;
@@ -724,7 +736,9 @@ NicoScraper.TagSearchAtom = (function(_super) {
 
   function TagSearchAtom(keyword, options) {
     this.keyword = keyword;
-    this.options = options != null ? options : {
+    this.options = options != null ? options : {};
+    this._cache = {};
+    this.options = {
       page: 1,
       sort: 'newness_of_comment',
       order: 'desc'
@@ -733,11 +747,13 @@ NicoScraper.TagSearchAtom = (function(_super) {
   }
 
   TagSearchAtom.prototype.next = function() {
-    return this.page += 1;
+    this.page += 1;
+    return this._cache = {};
   };
 
   TagSearchAtom.prototype.prev = function() {
-    return this.page -= 1;
+    this.page -= 1;
+    return this._cache = {};
   };
 
   TagSearchAtom.prototype.uri = function() {
@@ -745,17 +761,17 @@ NicoScraper.TagSearchAtom = (function(_super) {
   };
 
   TagSearchAtom.prototype.body = function() {
-    if (this._body != null) {
-      return this._body;
+    if (this._cache.body != null) {
+      return this._cache.body;
     } else {
       this.scraped = true;
-      return this._body = $(NicoScraper.Connection(this.uri()));
+      return this._cache.body = $(NicoScraper.Connection(this.uri()));
     }
   };
 
   TagSearchAtom.prototype.movies = function() {
-    var _ref;
-    return (_ref = this._movies) != null ? _ref : this._movies = this._entries();
+    var _base, _ref;
+    return (_ref = (_base = this._cache).movies) != null ? _ref : _base.movies = this._entries();
   };
 
   TagSearchAtom.prototype._queryParam = function() {
@@ -829,53 +845,53 @@ NicoScraper.TagSearchAtom.Entry = (function(_super) {
   }
 
   Entry.prototype.content = function() {
-    var _ref;
-    return (_ref = this._content) != null ? _ref : this._content = this.body.find('content');
+    var _base, _ref;
+    return (_ref = (_base = this._cache).content) != null ? _ref : _base.content = this.body.find('content');
   };
 
   Entry.prototype.title = function() {
-    var _ref;
-    return (_ref = this._title) != null ? _ref : this._title = this.body.find('title').text();
+    var _base, _ref;
+    return (_ref = (_base = this._cache).title) != null ? _ref : _base.title = this.body.find('title').text();
   };
 
   Entry.prototype.videoId = function() {
-    var _ref;
-    return (_ref = this._videoId) != null ? _ref : this._videoId = this.body.find('link').attr('href').split('/')[4];
+    var _base, _ref;
+    return (_ref = (_base = this._cache).videoId) != null ? _ref : _base.videoId = this.body.find('link').attr('href').split('/')[4];
   };
 
   Entry.prototype.timelikeId = function() {
-    var _ref;
-    return (_ref = this._timelikeId) != null ? _ref : this._timelikeId = Number(this.body.find('id').text().split(',')[1].split(':')[1].split('/')[2]);
+    var _base, _ref;
+    return (_ref = (_base = this._cache).timelikeId) != null ? _ref : _base.timelikeId = Number(this.body.find('id').text().split(',')[1].split(':')[1].split('/')[2]);
   };
 
   Entry.prototype.published = function() {
-    var _ref;
-    return (_ref = this._published) != null ? _ref : this._published = this.body.find('published').text();
+    var _base, _ref;
+    return (_ref = (_base = this._cache).published) != null ? _ref : _base.published = this.body.find('published').text();
   };
 
   Entry.prototype.updated = function() {
-    var _ref;
-    return (_ref = this._updated) != null ? _ref : this._updated = this.body.find('updated').text();
+    var _base, _ref;
+    return (_ref = (_base = this._cache).updated) != null ? _ref : _base.updated = this.body.find('updated').text();
   };
 
   Entry.prototype.thumbnailUrl = function() {
-    var _ref;
-    return (_ref = this._thumbnailUrl) != null ? _ref : this._thumbnailUrl = this.content().find('img').attr('src');
+    var _base, _ref;
+    return (_ref = (_base = this._cache).thumbnailUrl) != null ? _ref : _base.thumbnailUrl = this.content().find('img').attr('src');
   };
 
   Entry.prototype.description = function() {
-    var _ref;
-    return (_ref = this._description) != null ? _ref : this._description = this.content().find('.nico-description').text();
+    var _base, _ref;
+    return (_ref = (_base = this._cache).description) != null ? _ref : _base.description = this.content().find('.nico-description').text();
   };
 
   Entry.prototype.length = function() {
-    var _ref;
-    return (_ref = this._length) != null ? _ref : this._length = this._convertToSec(this.content().find('.nico-info-length').text());
+    var _base, _ref;
+    return (_ref = (_base = this._cache).length) != null ? _ref : _base.length = this._cache.convertToSec(this.content().find('.nico-info-length').text());
   };
 
   Entry.prototype.infoDate = function() {
-    var _ref;
-    return (_ref = this._infoDate) != null ? _ref : this._infoDate = this._convertToUnixTime(this.content().find('.nico-info-date').text());
+    var _base, _ref;
+    return (_ref = (_base = this._cache).infoDate) != null ? _ref : _base.infoDate = this._cache.convertToUnixTime(this.content().find('.nico-info-date').text());
   };
 
   return Entry;

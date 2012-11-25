@@ -1,26 +1,35 @@
 class NicoScraper.TagSearchAtom extends Module
   @extend NicoScraper.Utility
 
-  constructor: (@keyword, @options={page:1, sort:'newness_of_comment', order:'desc'}) ->
+  constructor: (@keyword, @options={}) ->
+    @_cache = {}
+
+    @options =
+      page: 1
+      sort:'newness_of_comment'
+      order:'desc'
+
     @page = @options.page
 
   next : ->
     @page += 1
+    @_cache = {}
 
   prev : ->
     @page -= 1
+    @_cache = {}
 
   uri : -> "http://www.nicovideo.jp/tag/#{@keyword}?" + @_queryParam()
 
   body: ->
-    if @_body?
-      @_body
+    if @_cache.body?
+      @_cache.body
     else
       @scraped = true
-      @_body = $(NicoScraper.Connection @uri())
+      @_cache.body = $(NicoScraper.Connection @uri())
 
   movies: ->
-    @_movies ?= @_entries()
+    @_cache.movies ?= @_entries()
 
 
   _queryParam : ->
@@ -64,33 +73,33 @@ class NicoScraper.TagSearchAtom.Entry extends Module
   constructor: (@body) ->
 
   content: ->
-    @_content ?= @body.find 'content'
+    @_cache.content ?= @body.find 'content'
 
   title: ->
-    @_title ?= @body.find('title').text()
+    @_cache.title ?= @body.find('title').text()
 
   videoId: ->
-    @_videoId ?= @body.find('link').attr('href').split('/')[4]
+    @_cache.videoId ?= @body.find('link').attr('href').split('/')[4]
 
   timelikeId: ->
-    @_timelikeId ?=
+    @_cache.timelikeId ?=
       Number @body.find('id').text()
                   .split(',')[1].split(':')[1].split('/')[2]
   published: ->
-    @_published ?= @body.find('published').text()
+    @_cache.published ?= @body.find('published').text()
 
   updated: ->
-    @_updated ?= @body.find('updated').text()
+    @_cache.updated ?= @body.find('updated').text()
 
   thumbnailUrl: ->
-    @_thumbnailUrl ?= @content().find('img').attr('src')
+    @_cache.thumbnailUrl ?= @content().find('img').attr('src')
 
   description: ->
-    @_description ?= @content().find('.nico-description').text()
+    @_cache.description ?= @content().find('.nico-description').text()
 
   length: ->
-    @_length ?= @_convertToSec @content().find('.nico-info-length').text()
+    @_cache.length ?= @_cache.convertToSec @content().find('.nico-info-length').text()
 
   infoDate: ->
-    @_infoDate ?= @_convertToUnixTime @content().find('.nico-info-date').text()
+    @_cache.infoDate ?= @_cache.convertToUnixTime @content().find('.nico-info-date').text()
 

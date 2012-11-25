@@ -1,8 +1,6 @@
 class NicoScraper.TagSearch
   constructor: (@keyword) ->
 
-  # keyword: -> @_source "keyword"
-
   movies: ->
     movies = {}
 
@@ -15,6 +13,12 @@ class NicoScraper.TagSearch
   movie: (id) ->
     @movies()[id]
 
+  next : ->
+    @__tagSearchAtom.next()
+
+  prev : ->
+    @__tagSearchAtom.prev()
+
 
   _source: (attr) ->
     @_tagSearchAtom()[attr]() if @_tagSearchAtom().scraped and @_tagSearchAtom()[attr]?
@@ -25,7 +29,7 @@ class NicoScraper.TagSearch
 
 
   _tagSearchAtom: =>
-    @__tagSearchAtom ?= new NicoScraper.TagSearchAtom @keyword
+    @__tagSearchAtom ?= new NicoScraper.TagSearchAtom @keyword, {page: @_page}
 
   _tagSearch: =>
-    @__tagSearchAtom ?= new NicoScraper.TagSearchAtom @keyword
+    @__tagSearchAtom ?= new NicoScraper.TagSearchAtom @keyword, {page: @_page}
