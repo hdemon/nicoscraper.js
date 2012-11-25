@@ -8,7 +8,7 @@ class NicoScraper.GetThumbInfo extends Module
       @_body
     else
       @scraped = true
-      @_body = NicoScraper.Connection "http://ext.nicovideo.jp/api/getthumbinfo/#{@id}"
+      @_body = $(NicoScraper.Connection "http://ext.nicovideo.jp/api/getthumbinfo/#{@id}")
 
   title: ->
     @_title ?= @body().find('title').text()

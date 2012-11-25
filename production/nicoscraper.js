@@ -173,7 +173,7 @@ NicoScraper.GetThumbInfo = (function(_super) {
       return this._body;
     } else {
       this.scraped = true;
-      return this._body = NicoScraper.Connection("http://ext.nicovideo.jp/api/getthumbinfo/" + this.id);
+      return this._body = $(NicoScraper.Connection("http://ext.nicovideo.jp/api/getthumbinfo/" + this.id));
     }
   };
 
@@ -406,20 +406,24 @@ NicoScraper.Movie = (function() {
   };
 
   Movie.prototype._source = function(attr) {
-    if ((this.source != null) && (this.source[attr] != null)) {
+    var gt, ma, _scraped;
+    gt = this._getThumbInfo();
+    ma = this._mylistAtom();
+    _scraped = function() {
+      if (gt.scraped != null) {
+        return gt[attr]();
+      } else {
+        return ma[attr]();
+      }
+    };
+    if (this.source != null) {
       return this.source[attr]();
-    }
-    if (this._getThumbInfo().scraped && (this._getThumbInfo()[attr] != null)) {
-      this._getThumbInfo()[attr]();
-    }
-    if (this._getThumbInfo().scraped && (this._getThumbInfo()[attr] != null)) {
-      this._mylistAtom()[attr]();
-    }
-    if (this._getThumbInfo()[attr] != null) {
-      this._getThumbInfo()[attr]();
-    }
-    if (this._mylistAtom()[attr] != null) {
-      return this._mylistAtom()[attr]();
+    } else if ((gt[attr] != null) && (ma[attr] != null)) {
+      return _scraped();
+    } else if (gt[attr] != null) {
+      return gt[attr]();
+    } else if (ma[attr] != null) {
+      return ma[attr]();
     }
   };
 
@@ -430,7 +434,7 @@ NicoScraper.Movie = (function() {
 
   Movie.prototype._mylistAtom = function() {
     var _ref;
-    return (_ref = this.__mylistAtom) != null ? _ref : this.__mylistAtom = new NicoScraper.mylistAtom(this.id);
+    return (_ref = this.__mylistAtom) != null ? _ref : this.__mylistAtom = new NicoScraper.MylistAtom(this.id);
   };
 
   return Movie;

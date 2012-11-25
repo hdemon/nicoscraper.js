@@ -34,16 +34,27 @@ class NicoScraper.Movie
 
 
   _source: (attr) ->
-    return @source[attr]() if @source? and @source[attr]?
+    gt = @_getThumbInfo()
+    ma = @_mylistAtom()
 
-    @_getThumbInfo()[attr]() if @_getThumbInfo().scraped and @_getThumbInfo()[attr]?
-    @_mylistAtom()[attr]() if @_getThumbInfo().scraped and @_getThumbInfo()[attr]?
+    _scraped = ->
+      if gt.scraped?
+        gt[attr]()
+      else
+        ma[attr]()
 
-    @_getThumbInfo()[attr]() if @_getThumbInfo()[attr]?
-    @_mylistAtom()[attr]() if @_mylistAtom()[attr]?
+    if @source?
+      @source[attr]()
+    else if gt[attr]? and ma[attr]?
+      _scraped()
+    else if gt[attr]?
+      gt[attr]()
+    else if ma[attr]?
+      ma[attr]()
+
 
   _getThumbInfo: =>
     @__getThumbInfo ?= new NicoScraper.GetThumbInfo @id
 
   _mylistAtom: =>
-    @__mylistAtom ?= new NicoScraper.mylistAtom @id
+    @__mylistAtom ?= new NicoScraper.MylistAtom @id
