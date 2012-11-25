@@ -1,2 +1,5 @@
 NicoScraper = 
-  Source : {}
+  MylistAtom:
+    Entry: {}
+  Movie: {}
+  Mylist: {}

@@ -14,7 +14,18 @@ class NicoScraper.Mylist
   author: -> @_source "author"
   mylistId: -> @_source "mylistId"
   updatedTime: -> @_source "updated"
+
   movies: ->
+    movies = {}
+
+    for videoId, movie of @_source("movies")
+      movies[videoId] = new NicoScraper.Movie videoId, movie
+
+    movies
+
+  movie: (id) ->
+    @movies()[id]
+
 
   _source: (attr) ->
     @_mylistAtom()[attr]() if @_mylistAtom().scraped and @_mylistAtom()[attr]?
@@ -25,7 +36,7 @@ class NicoScraper.Mylist
 
 
   _mylistAtom: =>
-    @__mylistAtom ?= new NicoScraper.mylistAtom @id
+    @__mylistAtom ?= new NicoScraper.MylistAtom @id
 
   _mylist: =>
-    @__mylistAtom ?= new NicoScraper.mylistAtom @id
+    @__mylistAtom ?= new NicoScraper.MylistAtom @id

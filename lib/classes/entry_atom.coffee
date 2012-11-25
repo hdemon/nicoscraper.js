@@ -1,18 +1,36 @@
-class NicoScraper.Source.EntryAtom extends Module
+class NicoScraper.MylistAtom.Entry extends Module
   @extend NicoScraper.Utility
 
-  constructor : (@body) ->
-    @b = $(@body)
-    @c = @b.find 'content'
+  constructor: (@body) ->
 
-    @title = @b.find('title').text()
-    @videoId = @b.find('link').attr('href').split('/')[4]
-    @timelikeId = Number @b.find('id').text().split(',')[1].split(':')[1].split('/')[2]
-    @published = @b.find('published').text()
-    @updated = @b.find('updated').text()
-    @thumbnailUrl = @c.find('img').attr('src')
-    @description = @c.find('.nico-description').text()
-    @length = @_convertToSec @c.find('.nico-info-length').text()
-    @infoDate = @_convertToUnixTime @c.find('.nico-info-date').text()
+  content: ->
+    @_content ?= @body.find 'content'
 
-module.exports = NicoScraper.EntryAtom
+  title: ->
+    @_title ?= @body.find('title').text()
+
+  videoId: ->
+    @_videoId ?= @body.find('link').attr('href').split('/')[4]
+
+  timelikeId: ->
+    @_timelikeId ?=
+      Number @body.find('id').text()
+                  .split(',')[1].split(':')[1].split('/')[2]
+  published: ->
+    @_published ?= @body.find('published').text()
+
+  updated: ->
+    @_updated ?= @body.find('updated').text()
+
+  thumbnailUrl: ->
+    @_thumbnailUrl ?= @content().find('img').attr('src')
+
+  description: ->
+    @_description ?= @content().find('.nico-description').text()
+
+  length: ->
+    @_length ?= @_convertToSec @content().find('.nico-info-length').text()
+
+  infoDate: ->
+    @_infoDate ?= @_convertToUnixTime @content().find('.nico-info-date').text()
+

@@ -4,7 +4,7 @@ class NicoScraper.Connection
 
     switch response.statusCode
       when 200
-        resource = $(response.data.toString())
+        resource = response.data.toString()
       when 404
         ""
       when 500

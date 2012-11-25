@@ -1,5 +1,5 @@
 class NicoScraper.Movie
-  constructor: (@id) ->
+  constructor: (@id, @source) ->
 
   type: ->
     if _(@id).startsWith 'nm'
@@ -34,6 +34,8 @@ class NicoScraper.Movie
 
 
   _source: (attr) ->
+    return @source[attr]() if @source? and @source[attr]?
+
     @_getThumbInfo()[attr]() if @_getThumbInfo().scraped and @_getThumbInfo()[attr]?
     @_mylistAtom()[attr]() if @_getThumbInfo().scraped and @_getThumbInfo()[attr]?
 
@@ -44,4 +46,4 @@ class NicoScraper.Movie
     @__getThumbInfo ?= new NicoScraper.GetThumbInfo @id
 
   _mylistAtom: =>
-    @__mylistAtom ?= new NicoScraper.GetThumbInfo @id
+    @__mylistAtom ?= new NicoScraper.mylistAtom @id

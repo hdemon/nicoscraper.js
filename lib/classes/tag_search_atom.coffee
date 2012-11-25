@@ -1,4 +1,4 @@
-class NicoScraper.Source.TagSearchAtom
+class NicoScraper.TagSearchAtom
   constructor : (@xml) ->
     @entry = {}
     for entry in $(@xml).find 'entry'
