@@ -61,26 +61,19 @@ Module = (function() {
 NicoScraper.Connection = (function() {
 
   function Connection(uri) {
-    var resource, response;
+    var response;
     this.uri = uri;
     response = httpsync.get(this.uri).end();
     switch (response.statusCode) {
       case 200:
-        resource = response.data.toString();
+        response.data.toString();
         break;
       case 404:
-        "";
-
-        break;
       case 500:
-        "";
-
-        break;
       case 503:
         "";
 
     }
-    return resource;
   }
 
   return Connection;
