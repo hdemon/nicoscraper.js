@@ -1,6 +1,6 @@
 NicoScraper.tag = (keyword, callback) ->
   tag = new NicoScraper.TagSearch keyword
-  order == 'continue'
+  order = 'continue'
   movies = tag.movies()
 
   nextMovie = ->
@@ -9,4 +9,3 @@ NicoScraper.tag = (keyword, callback) ->
 
   while order == 'continue'
     order = callback nextMovie()
-

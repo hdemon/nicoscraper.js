@@ -656,36 +656,19 @@ NicoScraper.MylistAtom.Entry = (function(_super) {
 
 
 NicoScraper.tag = function(keyword, callback) {
-  var continueOrder, movies, succ, tag, _results;
+  var movies, nextMovie, order, tag, _results;
   tag = new NicoScraper.TagSearch(keyword);
+  order = 'continue';
   movies = tag.movies();
-  succ = function() {
+  nextMovie = function() {
     if (_.isEmpty(movies)) {
       movies = tag.nextPage().movies();
     }
     return movies.shift();
   };
   _results = [];
-  while (continueOrder === true) {
-    _results.push(continueOrder = callback(succ()));
-  }
-  return _results;
-};
-
-NicoScraper.tag = function(keyword, callback) {
-  var continueOrder, movies, succ, tag, _results;
-  tag = new NicoScraper.TagSearch(keyword);
-  movies = tag.movies();
-  succ = function() {
-    if (_.isEmpty(movies)) {
-      movies = tag.nextPage().movies();
-    }
-    return movies.shift();
-  };
-  continueOrder = true;
-  _results = [];
-  while (continueOrder === true) {
-    _results.push(continueOrder = callback(succ()));
+  while (order === 'continue') {
+    _results.push(order = callback(nextMovie()));
   }
   return _results;
 };

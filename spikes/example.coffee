@@ -4,9 +4,9 @@ movie = new nicoscraper.Movie 'sm9'
 mylist = new nicoscraper.Mylist '33048313'
 tag = new nicoscraper.TagSearch 'ゆっくり'
 
-tag = new nicoscraper.tag 'ゆっくり', (movie) ->
+nicoscraper.tag 'ゆっくり', (movie) ->
   console.log movie.title()
-  true
+  'continue'
 
 # console.log tag.movies()
 # console.log tag.movie("sm11622191").title()
