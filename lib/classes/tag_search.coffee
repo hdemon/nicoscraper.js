@@ -2,22 +2,23 @@ class NicoScraper.TagSearch
   constructor: (@keyword) ->
 
   movies: ->
-    movies = {}
+    movies = []
 
     for videoId, movie of @_source("movies")
-      movies[videoId] = new NicoScraper.Movie videoId, movie
+      movies.push new NicoScraper.Movie videoId, movie
 
     movies
 
   movie: (id) ->
     @movies()[id]
 
-  next : ->
+  nextPage : ->
     @__tagSearchAtom.next()
+    @
 
-  prev : ->
+  prevPage : ->
     @__tagSearchAtom.prev()
-
+    @
 
   _source: (attr) ->
     @_tagSearchAtom()[attr]() if @_tagSearchAtom().scraped and @_tagSearchAtom()[attr]?

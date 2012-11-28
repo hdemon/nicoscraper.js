@@ -654,6 +654,42 @@ NicoScraper.MylistAtom.Entry = (function(_super) {
 
 })(Module);
 
+
+NicoScraper.tag = function(keyword, callback) {
+  var continueOrder, movies, succ, tag, _results;
+  tag = new NicoScraper.TagSearch(keyword);
+  movies = tag.movies();
+  succ = function() {
+    if (_.isEmpty(movies)) {
+      movies = tag.nextPage().movies();
+    }
+    return movies.shift();
+  };
+  _results = [];
+  while (continueOrder === true) {
+    _results.push(continueOrder = callback(succ()));
+  }
+  return _results;
+};
+
+NicoScraper.tag = function(keyword, callback) {
+  var continueOrder, movies, succ, tag, _results;
+  tag = new NicoScraper.TagSearch(keyword);
+  movies = tag.movies();
+  succ = function() {
+    if (_.isEmpty(movies)) {
+      movies = tag.nextPage().movies();
+    }
+    return movies.shift();
+  };
+  continueOrder = true;
+  _results = [];
+  while (continueOrder === true) {
+    _results.push(continueOrder = callback(succ()));
+  }
+  return _results;
+};
+
 var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
 NicoScraper.TagSearch = (function() {
@@ -668,11 +704,11 @@ NicoScraper.TagSearch = (function() {
 
   TagSearch.prototype.movies = function() {
     var movie, movies, videoId, _ref;
-    movies = {};
+    movies = [];
     _ref = this._source("movies");
     for (videoId in _ref) {
       movie = _ref[videoId];
-      movies[videoId] = new NicoScraper.Movie(videoId, movie);
+      movies.push(new NicoScraper.Movie(videoId, movie));
     }
     return movies;
   };
@@ -681,12 +717,14 @@ NicoScraper.TagSearch = (function() {
     return this.movies()[id];
   };
 
-  TagSearch.prototype.next = function() {
-    return this.__tagSearchAtom.next();
+  TagSearch.prototype.nextPage = function() {
+    this.__tagSearchAtom.next();
+    return this;
   };
 
-  TagSearch.prototype.prev = function() {
-    return this.__tagSearchAtom.prev();
+  TagSearch.prototype.prevPage = function() {
+    this.__tagSearchAtom.prev();
+    return this;
   };
 
   TagSearch.prototype._source = function(attr) {
