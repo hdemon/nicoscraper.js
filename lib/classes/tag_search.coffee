@@ -4,7 +4,6 @@ class NicoScraper.TagSearch
   movies: ->
     movies = {}
 
-    console.log @_source("movies")
     for videoId, movie of @_source("movies")
       movies[videoId] = new NicoScraper.Movie videoId, movie
 

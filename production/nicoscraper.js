@@ -66,13 +66,11 @@ NicoScraper.Connection = (function() {
     response = httpsync.get(this.uri).end();
     switch (response.statusCode) {
       case 200:
-        response.data.toString();
-        break;
+        return response.data.toString();
       case 404:
       case 500:
       case 503:
-        "";
-
+        return "";
     }
   }
 
@@ -671,7 +669,6 @@ NicoScraper.TagSearch = (function() {
   TagSearch.prototype.movies = function() {
     var movie, movies, videoId, _ref;
     movies = {};
-    console.log(this._source("movies"));
     _ref = this._source("movies");
     for (videoId in _ref) {
       movie = _ref[videoId];
