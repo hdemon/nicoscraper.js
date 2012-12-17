@@ -655,9 +655,9 @@ NicoScraper.MylistAtom.Entry = (function(_super) {
 })(Module);
 
 
-NicoScraper.tag = function(keyword, callback) {
-  var movies, nextMovie, order, tag, _results;
-  tag = new NicoScraper.TagSearch(keyword);
+NicoScraper.tag = function(keyword, options) {
+  var movie, movies, nextMovie, order, tag;
+  tag = new NicoScraper.TagSearch(keyword, options);
   order = 'continue';
   movies = tag.movies();
   nextMovie = function() {
@@ -666,19 +666,21 @@ NicoScraper.tag = function(keyword, callback) {
     }
     return movies.shift();
   };
-  _results = [];
-  while (order === 'continue') {
-    _results.push(order = callback(nextMovie()));
+  while (order === 'continue' && tag.isContinued()) {
+    if ((movie = nextMovie()) != null) {
+      order = options.each(movie);
+    }
   }
-  return _results;
+  return options.finished();
 };
 
 var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
 NicoScraper.TagSearch = (function() {
 
-  function TagSearch(keyword) {
+  function TagSearch(keyword, options) {
     this.keyword = keyword;
+    this.options = options;
     this._tagSearch = __bind(this._tagSearch, this);
 
     this._tagSearchAtom = __bind(this._tagSearchAtom, this);
@@ -686,14 +688,18 @@ NicoScraper.TagSearch = (function() {
   }
 
   TagSearch.prototype.movies = function() {
-    var movie, movies, videoId, _ref;
-    movies = [];
-    _ref = this._source("movies");
-    for (videoId in _ref) {
-      movie = _ref[videoId];
-      movies.push(new NicoScraper.Movie(videoId, movie));
-    }
-    return movies;
+    var _ref,
+      _this = this;
+    return (_ref = this._movies) != null ? _ref : this._movies = (function() {
+      var movie, movies, videoId, _ref1;
+      movies = [];
+      _ref1 = _this._source("movies");
+      for (videoId in _ref1) {
+        movie = _ref1[videoId];
+        movies.push(new NicoScraper.Movie(videoId, movie));
+      }
+      return movies;
+    })();
   };
 
   TagSearch.prototype.movie = function(id) {
@@ -701,13 +707,19 @@ NicoScraper.TagSearch = (function() {
   };
 
   TagSearch.prototype.nextPage = function() {
-    this.__tagSearchAtom.next();
+    this._tagSearchAtom().next();
+    delete this._movies;
     return this;
   };
 
   TagSearch.prototype.prevPage = function() {
-    this.__tagSearchAtom.prev();
+    this._tagSearchAtom().prev();
+    delete this._movies;
     return this;
+  };
+
+  TagSearch.prototype.isContinued = function() {
+    return this._tagSearchAtom().size() > 0;
   };
 
   TagSearch.prototype._source = function(attr) {
@@ -727,16 +739,12 @@ NicoScraper.TagSearch = (function() {
 
   TagSearch.prototype._tagSearchAtom = function() {
     var _ref;
-    return (_ref = this.__tagSearchAtom) != null ? _ref : this.__tagSearchAtom = new NicoScraper.TagSearchAtom(this.keyword, {
-      page: this._page
-    });
+    return (_ref = this.__tagSearchAtom) != null ? _ref : this.__tagSearchAtom = new NicoScraper.TagSearchAtom(this.keyword, this.options);
   };
 
   TagSearch.prototype._tagSearch = function() {
     var _ref;
-    return (_ref = this.__tagSearchAtom) != null ? _ref : this.__tagSearchAtom = new NicoScraper.TagSearchAtom(this.keyword, {
-      page: this._page
-    });
+    return (_ref = this.__tagSearchAtom) != null ? _ref : this.__tagSearchAtom = new NicoScraper.TagSearchAtom(this.keyword, this.options);
   };
 
   return TagSearch;
@@ -754,14 +762,11 @@ NicoScraper.TagSearchAtom = (function(_super) {
 
   function TagSearchAtom(keyword, options) {
     this.keyword = keyword;
-    this.options = options != null ? options : {};
     this._cache = {};
-    this.options = {
-      page: 1,
-      sort: 'newness_of_comment',
-      order: 'desc'
-    };
-    this.page = this.options.page;
+    this.page = options.page != null ? options.page : 1;
+    this.sort = options.sort != null ? options.sort : 'newness_of_comment';
+    this.order = options.order != null ? options.order : 'desc';
+    this.page = options.page;
   }
 
   TagSearchAtom.prototype.next = function() {
@@ -792,6 +797,10 @@ NicoScraper.TagSearchAtom = (function(_super) {
     return (_ref = (_base = this._cache).movies) != null ? _ref : _base.movies = this._entries();
   };
 
+  TagSearchAtom.prototype.size = function() {
+    return _.size(this.movies());
+  };
+
   TagSearchAtom.prototype._queryParam = function() {
     var param;
     param = [];
@@ -811,7 +820,7 @@ NicoScraper.TagSearchAtom = (function(_super) {
   };
 
   TagSearchAtom.prototype._sortParam = function() {
-    switch (this.options.sort) {
+    switch (this.sort) {
       case 'newness_of_comment':
         return null;
       case 'view_num':
@@ -828,7 +837,7 @@ NicoScraper.TagSearchAtom = (function(_super) {
   };
 
   TagSearchAtom.prototype._orderParam = function() {
-    switch (this.options.order) {
+    switch (this.order) {
       case 'asc':
         return 'order=a';
       case 'desc':

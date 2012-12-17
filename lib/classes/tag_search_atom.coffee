@@ -1,15 +1,13 @@
 class NicoScraper.TagSearchAtom extends Module
   @extend NicoScraper.Utility
 
-  constructor: (@keyword, @options={}) ->
+  constructor: (@keyword, options) ->
     @_cache = {}
+    @page = if options.page? then options.page else 1
+    @sort = if options.sort? then options.sort else 'newness_of_comment'
+    @order = if options.order? then options.order else 'desc'
 
-    @options =
-      page: 1
-      sort:'newness_of_comment'
-      order:'desc'
-
-    @page = @options.page
+    @page = options.page
 
   next : ->
     @page += 1
@@ -31,6 +29,8 @@ class NicoScraper.TagSearchAtom extends Module
   movies: ->
     @_cache.movies ?= @_entries()
 
+  size: ->
+    _.size @movies()
 
   _queryParam : ->
     param = []
@@ -44,7 +44,7 @@ class NicoScraper.TagSearchAtom extends Module
   _pageParam : -> "page=#{@page}"
 
   _sortParam : ->
-    switch @options.sort
+    switch @sort
       when 'newness_of_comment' then null
       when 'view_num' then 'sort=v'
       when 'comment_num' then 'sort=r'
@@ -53,7 +53,7 @@ class NicoScraper.TagSearchAtom extends Module
       when 'length' then 'sort=l'
 
   _orderParam : ->
-    switch @options.order
+    switch @order
       when 'asc' then 'order=a'
       when 'desc' then null
 

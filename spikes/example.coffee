@@ -4,15 +4,11 @@ movie = new nicoscraper.Movie 'sm9'
 mylist = new nicoscraper.Mylist '33048313'
 tag = new nicoscraper.TagSearch 'ゆっくり'
 
-nicoscraper.tag 'ゆっくり', (movie) ->
-  console.log movie.title()
-  'continue'
 
 # console.log tag.movies()
 # console.log tag.movie("sm11622191").title()
 # tag.next()
 # console.log tag.movies()
-
 
 # console.log mylist.title()
 # console.log mylist.subTitle()
@@ -27,4 +23,14 @@ nicoscraper.tag 'ゆっくり', (movie) ->
 # # console.log movie.published()
 # console.log movie.tags()
 
-
+# nicoscraper.tag 'ABC',
+nicoscraper.tag 'ゆっくり実況プレイpart1リンク',
+  page: 1
+  sort: 'published_date'
+  order: 'desc'
+  each: (movie) ->
+    console.log movie
+    console.log movie.title()
+    'continue'
+  finished: ->
+    console.log 'finished'

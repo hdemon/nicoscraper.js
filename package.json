@@ -1,7 +1,7 @@
 {
   "name": "nicoscraper",
-  "description": "The best project ever.",
-  "version": "0.1.0",
+  "description": "Scraping tool for NicoNico Douga",
+  "version": "0.1.1",
   "homepage": "https://github.com/hdemon/nicoscraper.js",
   "author": {
     "name": "Masami Yonehara",
@@ -20,7 +20,7 @@
       "url": "https://github.com/hdemon/nicoscraper.js/blob/master/LICENSE-MIT"
     }
   ],
-  "main": "lib/nicoscraper",
+  "main": "production/nicoscraper.js",
   "engines": {
     "node": ">= 0.6.0"
   },
